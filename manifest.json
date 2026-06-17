@@ -1,0 +1,88 @@
+{
+  "id": "./index.html",
+  "name": "Luca Guitar Quest Studio Pro · Offline iPad Edition",
+  "short_name": "Guitar Quest",
+  "description": "Offlinefähige Gitarrenlern-App für das iPad mit lokaler Bibliothek, Lernpfad, Live-Mikrofonfeedback, Stimmgerät, Timing, Imports und optionalen Internetlinks.",
+  "lang": "de-DE",
+  "dir": "ltr",
+  "start_url": "./index.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "fullscreen"
+  ],
+  "orientation": "any",
+  "background_color": "#101215",
+  "theme_color": "#15181c",
+  "categories": [
+    "education",
+    "music",
+    "games"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Songbibliothek",
+      "short_name": "Songs",
+      "url": "./index.html?source=pwa&screen=library",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Stimmgerät",
+      "short_name": "Stimmen",
+      "url": "./index.html?source=pwa&screen=tuner",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Lernpfad",
+      "short_name": "Lernen",
+      "url": "./index.html?source=pwa&screen=learn",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
+}

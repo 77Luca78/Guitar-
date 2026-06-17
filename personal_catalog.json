@@ -1,0 +1,757 @@
+[
+  {
+    "title": "Kobold im Kopp",
+    "artist": "Versengold",
+    "status": "reference-template"
+  },
+  {
+    "title": "Valhalleluja",
+    "artist": "Nanowar Of Steel",
+    "status": "reference-template"
+  },
+  {
+    "title": "Sirin",
+    "artist": "Serinx",
+    "status": "reference-template"
+  },
+  {
+    "title": "Cut The Line",
+    "artist": "Final Request",
+    "status": "reference-template"
+  },
+  {
+    "title": "Love Has Gone",
+    "artist": "Alok, ALTA, Robert Falcon & Jess Glynne",
+    "status": "reference-template"
+  },
+  {
+    "title": "Future Folk",
+    "artist": "Goom Gum",
+    "status": "reference-template"
+  },
+  {
+    "title": "My Head",
+    "artist": "TH;EN",
+    "status": "reference-template"
+  },
+  {
+    "title": "I Got Love (feat. Nate Dogg)",
+    "artist": "CYRIL, Kelland & Nate Dogg",
+    "status": "reference-template"
+  },
+  {
+    "title": "Arrival",
+    "artist": "KREAM",
+    "status": "reference-template"
+  },
+  {
+    "title": "All Night – Extended Club Version",
+    "artist": "Example",
+    "status": "reference-template"
+  },
+  {
+    "title": "Lets Try It",
+    "artist": "Marten Hørger & BRANDON",
+    "status": "reference-template"
+  },
+  {
+    "title": "The Future Is Now",
+    "artist": "The Offspring",
+    "status": "reference-template"
+  },
+  {
+    "title": "Final Masquerade",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "Silence – John Summit Remix",
+    "artist": "Delerium, Sarah McLachlan & John Summit",
+    "status": "reference-template"
+  },
+  {
+    "title": "Terminator",
+    "artist": "Alok & SOLANCE",
+    "status": "reference-template"
+  },
+  {
+    "title": "Metalingus",
+    "artist": "Alter Bridge",
+    "status": "reference-template"
+  },
+  {
+    "title": "Another Life",
+    "artist": "Motionless In White",
+    "status": "reference-template"
+  },
+  {
+    "title": "Even If It Kills Me",
+    "artist": "Papa Roach",
+    "status": "reference-template"
+  },
+  {
+    "title": "Blackhole",
+    "artist": "Architects",
+    "status": "reference-template"
+  },
+  {
+    "title": "AFRAID TO DIE",
+    "artist": "P.O.D., Tatiana Shmayluk & Jinjer",
+    "status": "reference-template"
+  },
+  {
+    "title": "Girl With The Tattoo",
+    "artist": "Apparition",
+    "status": "reference-template"
+  },
+  {
+    "title": "Girl With Golden Eyes",
+    "artist": "Sixx:A.M.",
+    "status": "reference-template"
+  },
+  {
+    "title": "Tail Lights",
+    "artist": "Blacktop Mojo",
+    "status": "reference-template"
+  },
+  {
+    "title": "Everything Ends",
+    "artist": "Architects",
+    "status": "reference-template"
+  },
+  {
+    "title": "where did you go?",
+    "artist": "We Came As Romans",
+    "status": "reference-template"
+  },
+  {
+    "title": "I Want It All",
+    "artist": "Rise Against",
+    "status": "reference-template"
+  },
+  {
+    "title": "Not Strong Enough",
+    "artist": "Apocalyptica & Brent Smith",
+    "status": "reference-template"
+  },
+  {
+    "title": "Burn",
+    "artist": "MADE & San Andreas",
+    "status": "reference-template"
+  },
+  {
+    "title": "Dope",
+    "artist": "Yelawolf",
+    "status": "reference-template"
+  },
+  {
+    "title": "Power",
+    "artist": "Jeris Johnson",
+    "status": "reference-template"
+  },
+  {
+    "title": "Bis zur Sonne",
+    "artist": "Sido, B-Tight & Damion Davis",
+    "status": "reference-template"
+  },
+  {
+    "title": "Up From the Bottom",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "Unshatter",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "Monsters (feat. blackbear)",
+    "artist": "All Time Low & blackbear",
+    "status": "reference-template"
+  },
+  {
+    "title": "Smooth Criminal",
+    "artist": "Alien Ant Farm",
+    "status": "reference-template"
+  },
+  {
+    "title": "Drop It Like It's Hot",
+    "artist": "Snoop Dogg & Pharrell Williams",
+    "status": "reference-template"
+  },
+  {
+    "title": "Lohn Isch Da",
+    "artist": "Teddy Teclebrhan & Antoine Burtz",
+    "status": "reference-template"
+  },
+  {
+    "title": "Eyes on Fire – Zeds Dead Remix",
+    "artist": "Blue Foundation & Zeds Dead",
+    "status": "reference-template"
+  },
+  {
+    "title": "Heartbeat – Chase & Status We Just Bought A Guitar Mix",
+    "artist": "Nneka & Chase & Status",
+    "status": "reference-template"
+  },
+  {
+    "title": "Benzi Box",
+    "artist": "DANGERDOOM, MF DOOM, Danger Mouse & CeeLo Green",
+    "status": "reference-template"
+  },
+  {
+    "title": "Mr. Roboto",
+    "artist": "Styx",
+    "status": "reference-template"
+  },
+  {
+    "title": "Nutshell",
+    "artist": "Alice In Chains",
+    "status": "reference-template"
+  },
+  {
+    "title": "BMXing",
+    "artist": "mgk",
+    "status": "reference-template"
+  },
+  {
+    "title": "Left Behind",
+    "artist": "The Plot In You",
+    "status": "reference-template"
+  },
+  {
+    "title": "Addicted",
+    "artist": "Zerb, The Chainsmokers & Ink",
+    "status": "reference-template"
+  },
+  {
+    "title": "Out Of Control",
+    "artist": "Hoobastank",
+    "status": "reference-template"
+  },
+  {
+    "title": "I Just Don't Love You Anymore",
+    "artist": "Wake Up Hate",
+    "status": "reference-template"
+  },
+  {
+    "title": "I Don't Know Why I Love You",
+    "artist": "Stevie Wonder",
+    "status": "reference-template"
+  },
+  {
+    "title": "Mayday",
+    "artist": "Three Days Grace",
+    "status": "reference-template"
+  },
+  {
+    "title": "Not Afraid",
+    "artist": "Skillet",
+    "status": "reference-template"
+  },
+  {
+    "title": "Talk To Me",
+    "artist": "Champion, Four Tet, Skrillex & Naisha",
+    "status": "reference-template"
+  },
+  {
+    "title": "The Real Slim Shady",
+    "artist": "Eminem",
+    "status": "reference-template"
+  },
+  {
+    "title": "My Stress",
+    "artist": "NF",
+    "status": "reference-template"
+  },
+  {
+    "title": "Only",
+    "artist": "NF & Sasha Alex Sloan",
+    "status": "reference-template"
+  },
+  {
+    "title": "sun to me",
+    "artist": "mgk",
+    "status": "reference-template"
+  },
+  {
+    "title": "Over Each Other",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "pretty toxic revolver",
+    "artist": "mgk",
+    "status": "reference-template"
+  },
+  {
+    "title": "Endlich normale Leute",
+    "artist": "Trailerpark",
+    "status": "reference-template"
+  },
+  {
+    "title": "Arbeitskollegen",
+    "artist": "Trailerpark",
+    "status": "reference-template"
+  },
+  {
+    "title": "Hart Vermissen",
+    "artist": "Alligatoah",
+    "status": "reference-template"
+  },
+  {
+    "title": "ICH FÜHLE DICH",
+    "artist": "Alligatoah",
+    "status": "reference-template"
+  },
+  {
+    "title": "This Life (Theme from Sons of Anarchy)",
+    "artist": "Curtis Stigers & The Forest Rangers",
+    "status": "reference-template"
+  },
+  {
+    "title": "This Life",
+    "artist": "Curtis Stigers & The Forest Rangers",
+    "status": "reference-template"
+  },
+  {
+    "title": "Bodies",
+    "artist": "Drowning Pool",
+    "status": "reference-template"
+  },
+  {
+    "title": "Been To Hell",
+    "artist": "Hollywood Undead",
+    "status": "reference-template"
+  },
+  {
+    "title": "Worth Dying For",
+    "artist": "Rise Against",
+    "status": "reference-template"
+  },
+  {
+    "title": "You Give Love A Bad Name",
+    "artist": "Bon Jovi",
+    "status": "reference-template"
+  },
+  {
+    "title": "Cold",
+    "artist": "Crossfade",
+    "status": "reference-template"
+  },
+  {
+    "title": "Don't Wake Me",
+    "artist": "Skillet",
+    "status": "reference-template"
+  },
+  {
+    "title": "Mood",
+    "artist": "Fame on Fire",
+    "status": "reference-template"
+  },
+  {
+    "title": "On the Other Side",
+    "artist": "Flight Paths",
+    "status": "reference-template"
+  },
+  {
+    "title": "Darkbloom",
+    "artist": "We Came As Romans",
+    "status": "reference-template"
+  },
+  {
+    "title": "Suffocate",
+    "artist": "Kayzo & Bad Omens",
+    "status": "reference-template"
+  },
+  {
+    "title": "TRIALS",
+    "artist": "STARSET",
+    "status": "reference-template"
+  },
+  {
+    "title": "Naked And Alive",
+    "artist": "Milky Chance",
+    "status": "reference-template"
+  },
+  {
+    "title": "in these walls (my house) (feat. PVRIS)",
+    "artist": "mgk & PVRIS",
+    "status": "reference-template"
+  },
+  {
+    "title": "Far from Here",
+    "artist": "Emmit Fenn",
+    "status": "reference-template"
+  },
+  {
+    "title": "Frieden",
+    "artist": "K.I.Z",
+    "status": "reference-template"
+  },
+  {
+    "title": "Marlboro Lights",
+    "artist": "Bausa & Marteria",
+    "status": "reference-template"
+  },
+  {
+    "title": "JACKY – feat. Sido & Marteria",
+    "artist": "Marsimoto, Sido & Marteria",
+    "status": "reference-template"
+  },
+  {
+    "title": "Soul Song",
+    "artist": "Grey Daze",
+    "status": "reference-template"
+  },
+  {
+    "title": "Popular Monster",
+    "artist": "Falling In Reverse",
+    "status": "reference-template"
+  },
+  {
+    "title": "Eazy-Duz-It",
+    "artist": "Eazy-E, Dr. Dre & MC Ren",
+    "status": "reference-template"
+  },
+  {
+    "title": "Hail to the King",
+    "artist": "Avenged Sevenfold",
+    "status": "reference-template"
+  },
+  {
+    "title": "Friendly Fire",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "In Da Getto",
+    "artist": "J Balvin & Skrillex",
+    "status": "reference-template"
+  },
+  {
+    "title": "Mädchen auf dem Pferd",
+    "artist": "Luca-Dante Spadafora, Niklas Dee, Octavian & Peter Plate",
+    "status": "reference-template"
+  },
+  {
+    "title": "Killing Me Slowly",
+    "artist": "Bad Wolves",
+    "status": "reference-template"
+  },
+  {
+    "title": "Blood Shake (feat. Dope D.O.D.)",
+    "artist": "Salmo & Dope D.O.D.",
+    "status": "reference-template"
+  },
+  {
+    "title": "All I Have",
+    "artist": "NF",
+    "status": "reference-template"
+  },
+  {
+    "title": "If You Want Love",
+    "artist": "NF",
+    "status": "reference-template"
+  },
+  {
+    "title": "If I Had a Heart",
+    "artist": "Fever Ray",
+    "status": "reference-template"
+  },
+  {
+    "title": "Blah Blah Blah",
+    "artist": "Armin van Buuren",
+    "status": "reference-template"
+  },
+  {
+    "title": "In the End",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "Die Bitch",
+    "artist": "Marteria",
+    "status": "reference-template"
+  },
+  {
+    "title": "Drown In My Mind",
+    "artist": "Story Untold",
+    "status": "reference-template"
+  },
+  {
+    "title": "Make It Bun Dem",
+    "artist": "Skrillex & Damian Jr Gong Marley",
+    "status": "reference-template"
+  },
+  {
+    "title": "Slam Dunk (feat. Kstylis)",
+    "artist": "Valentino Khan, Skrillex & Kstylis",
+    "status": "reference-template"
+  },
+  {
+    "title": "Drag Me To Hell",
+    "artist": "Subway To Sally & Chris Harms",
+    "status": "reference-template"
+  },
+  {
+    "title": "Crawling",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "Mockingbird",
+    "artist": "Eminem",
+    "status": "reference-template"
+  },
+  {
+    "title": "Something Better – Acoustic",
+    "artist": "The Broken View",
+    "status": "reference-template"
+  },
+  {
+    "title": "Rasend Herz",
+    "artist": "In Extremo",
+    "status": "reference-template"
+  },
+  {
+    "title": "Arschficksong",
+    "artist": "Sido",
+    "status": "reference-template"
+  },
+  {
+    "title": "For Evigt",
+    "artist": "Volbeat & Johan Olsen",
+    "status": "reference-template"
+  },
+  {
+    "title": "The Devil's Bleeding Crown",
+    "artist": "Volbeat",
+    "status": "reference-template"
+  },
+  {
+    "title": "Lola Montez",
+    "artist": "Volbeat",
+    "status": "reference-template"
+  },
+  {
+    "title": "A Warrior's Call",
+    "artist": "Volbeat",
+    "status": "reference-template"
+  },
+  {
+    "title": "Still Counting",
+    "artist": "Volbeat",
+    "status": "reference-template"
+  },
+  {
+    "title": "Wind",
+    "artist": "In Extremo",
+    "status": "reference-template"
+  },
+  {
+    "title": "Rap God",
+    "artist": "Eminem",
+    "status": "reference-template"
+  },
+  {
+    "title": "J'me tire",
+    "artist": "GIMS",
+    "status": "reference-template"
+  },
+  {
+    "title": "Narcissistic Cannibal (feat. Skrillex & Kill the Noise)",
+    "artist": "Korn, Skrillex & Kill The Noise",
+    "status": "reference-template"
+  },
+  {
+    "title": "Last Resort – Reimagined",
+    "artist": "Falling In Reverse",
+    "status": "reference-template"
+  },
+  {
+    "title": "Alpha Omega",
+    "artist": "mgk",
+    "status": "reference-template"
+  },
+  {
+    "title": "Alice In Wonderland",
+    "artist": "mgk",
+    "status": "reference-template"
+  },
+  {
+    "title": "Strip für mich (feat. Kitty Kat)",
+    "artist": "Sido & Kitty Kat",
+    "status": "reference-template"
+  },
+  {
+    "title": "Don't Cry (Original)",
+    "artist": "Guns N' Roses",
+    "status": "reference-template"
+  },
+  {
+    "title": "Snuff",
+    "artist": "Slipknot",
+    "status": "reference-template"
+  },
+  {
+    "title": "Here Without You",
+    "artist": "3 Doors Down",
+    "status": "reference-template"
+  },
+  {
+    "title": "The Messenger",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "3 Monde",
+    "artist": "Sido",
+    "status": "reference-template"
+  },
+  {
+    "title": "Black Hole",
+    "artist": "We Came As Romans & Caleb Shomo",
+    "status": "reference-template"
+  },
+  {
+    "title": "Intro",
+    "artist": "Sido",
+    "status": "reference-template"
+  },
+  {
+    "title": "Elfenbein (feat. Yasha & Miss Platnum)",
+    "artist": "Marteria, Yasha & Miss Platnum",
+    "status": "reference-template"
+  },
+  {
+    "title": "El Presidente",
+    "artist": "Marteria",
+    "status": "reference-template"
+  },
+  {
+    "title": "Bengalische Tiger",
+    "artist": "Marteria",
+    "status": "reference-template"
+  },
+  {
+    "title": "Immer wenn ich high bin (feat. Walking Trett)",
+    "artist": "Marsimoto & Walking Trett",
+    "status": "reference-template"
+  },
+  {
+    "title": "Fighting Myself",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "Figure.09",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "Don't Stay",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "One More Light",
+    "artist": "Linkin Park",
+    "status": "reference-template"
+  },
+  {
+    "title": "Find Myself",
+    "artist": "Asking Alexandria",
+    "status": "reference-template"
+  },
+  {
+    "title": "HAPPY",
+    "artist": "NF",
+    "status": "reference-template"
+  },
+  {
+    "title": "Cinema – Skrillex Remix",
+    "artist": "Benny Benassi, Gary Go & Skrillex",
+    "status": "reference-template"
+  },
+  {
+    "title": "Creeds Push Up",
+    "artist": "No Stress",
+    "status": "reference-template"
+  },
+  {
+    "title": "All The Ways I Could Die",
+    "artist": "Arrows in Action",
+    "status": "reference-template"
+  },
+  {
+    "title": "No Man",
+    "artist": "SMACK, No Thanks & WEIRD GRRL",
+    "status": "reference-template"
+  },
+  {
+    "title": "Get Up Off The Floor",
+    "artist": "FORTELLA",
+    "status": "reference-template"
+  },
+  {
+    "title": "EULE (feat. Marteria)",
+    "artist": "Jan Delay & Marteria",
+    "status": "reference-template"
+  },
+  {
+    "title": "Base Ventura",
+    "artist": "Marteria",
+    "status": "reference-template"
+  },
+  {
+    "title": "Aus dem Häuschen",
+    "artist": "DJ Sweap & DJ Pfund 500, Marteria & HARRIS",
+    "status": "reference-template"
+  },
+  {
+    "title": "Doublespeak",
+    "artist": "We Came As Romans",
+    "status": "reference-template"
+  },
+  {
+    "title": "Piece Of Your Heart – Alok Remix",
+    "artist": "MEDUZA, Alok & Goodboys",
+    "status": "reference-template"
+  },
+  {
+    "title": "Titanik",
+    "artist": "KITSCHKRIEG, Miss Platnum, Marteria & SFR",
+    "status": "reference-template"
+  },
+  {
+    "title": "Gone away",
+    "artist": "Nomy",
+    "status": "reference-template"
+  },
+  {
+    "title": "There's Fear In Letting Go",
+    "artist": "I Prevail",
+    "status": "reference-template"
+  },
+  {
+    "title": "Face Me",
+    "artist": "The Plot In You",
+    "status": "reference-template"
+  },
+  {
+    "title": "Endboss",
+    "artist": "Marteria",
+    "status": "reference-template"
+  },
+  {
+    "title": "Circles",
+    "artist": "Pierce The Veil",
+    "status": "reference-template"
+  },
+  {
+    "title": "Ich rolle mit meim Besten – Babos Remix",
+    "artist": "Haftbefehl & Marteria",
+    "status": "reference-template"
+  }
+]

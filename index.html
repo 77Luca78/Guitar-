@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#15181c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Luca Guitar Quest Studio Pro · iPad Offline</title>
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Luca Guitar Quest">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="color-scheme" content="dark">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="apple-touch-startup-image" href="ipad-pro-13-portrait.png" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="ipad-pro-13-landscape.png" media="(device-width: 1032px) and (device-height: 1376px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app" class="app-shell">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <button class="brand" data-nav="home" aria-label="Startseite öffnen">
+        <span class="brand-logo">LQ</span>
+        <span><strong>Luca Guitar Quest</strong><small>Studio Pro · Offline</small></span>
+      </button>
+      <nav class="desktop-nav" aria-label="Hauptnavigation">
+        <button data-nav="home" class="active">⌂ Startseite</button>
+        <button data-nav="learn">◇ Lernen</button>
+        <button data-nav="library">♫ Bibliothek</button>
+        <button data-nav="kids">★ Kinderlieder</button>
+        <button data-nav="import">⇩ Import</button>
+        <button data-nav="tuner">⌁ Stimmgerät</button>
+        <button data-nav="settings">⚙ Einstellungen</button>
+      </nav>
+      <div class="top-status">
+        <span class="status-chip">🔥 <b id="streakTop">0</b></span>
+        <span class="status-chip">⭐ <b id="xpTop">0</b> XP</span>
+        <span id="connectionTop" class="status-chip" title="Netzwerkstatus">◉ Offline</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section id="screen-home" class="screen active">
+      <div class="hero-card">
+        <div>
+          <span class="eyebrow">DEIN LERNPFAD</span>
+          <h1>Echte Gitarre. Klare Levels. Deine Songs.</h1>
+          <p>Übe Melodien, Akkorde, Rhythmus und Kinderlieder. Mit Mikrofonkontrolle, Timingwertung, Sternen, Wiederholungsabschnitten und einer eigenen Songbibliothek.</p>
+          <div class="button-row">
+            <button class="button primary" data-nav="learn">Weiterlernen</button>
+            <button class="button secondary" id="quickPracticeBtn">Schnellübung</button>
+            <button class="button secondary install-action" id="installHeroBtn">Auf iPad installieren</button>
+          </div>
+        </div>
+        <div class="level-ring" aria-label="Aktuelles Level"><div><strong id="homeLevel">1</strong><small>Level</small></div></div>
+      </div>
+      <div class="section-head"><div><h2>Heute empfohlen</h2><p>Kurze Einheiten für schnellen Fortschritt</p></div></div>
+      <div id="homeRecommended" class="horizontal-cards"></div>
+      <div class="section-head"><div><h2>Deine letzten Songs</h2><p>Direkt dort weitermachen, wo du aufgehört hast</p></div></div>
+      <div id="recentSongs" class="horizontal-cards"></div>
+    </section>
+
+    <section id="screen-learn" class="screen">
+      <div class="subnav" role="tablist">
+        <button class="active" data-learn-filter="all">Pfad</button>
+        <button data-learn-filter="Grundlagen">Grundlagen</button>
+        <button data-learn-filter="Akkorde">Akkorde</button>
+        <button data-learn-filter="Rhythmus">Rhythmus</button>
+        <button data-learn-filter="Songkurs">Songkurse</button>
+      </div>
+      <div class="section-head"><div><h2>Lernpfad</h2><p>Von offenen Saiten bis zu vollständigen Songabläufen</p></div></div>
+      <div id="learnGrid" class="lesson-grid"></div>
+      <div class="panel level-panel">
+        <div><span class="eyebrow">FORTSCHRITT</span><h3>Level <span id="learnLevel">1</span></h3><p><span id="learnXp">0</span> von <span id="nextLevelXp">500</span> XP</p></div>
+        <div class="progress-track"><i id="learnXpBar"></i></div>
+      </div>
+    </section>
+
+    <section id="screen-library" class="screen">
+      <div class="section-head"><div><h2>Songbibliothek</h2><p>Alle spielbaren Übungen, Favoriten und Imports in einer Übersicht</p></div></div>
+      <div class="library-toolbar panel">
+        <input id="librarySearch" type="search" placeholder="Nach Titel, Kategorie oder Quelle suchen">
+        <select id="libraryMode"><option value="all">Alle Modi</option><option value="melody">Melodie</option><option value="chords">Akkorde</option><option value="rhythm">Rhythmus</option></select>
+        <select id="libraryDifficulty"><option value="all">Alle Level</option><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option><option value="4">Level 4+</option></select>
+        <select id="librarySource"><option value="all">Alle Quellen</option><option value="built-in">Mitgeliefert</option><option value="traditional">Traditionell</option><option value="public-domain">Public Domain</option><option value="favorite">Favoriten</option><option value="import">Import</option></select>
+        <select id="librarySort"><option value="recommended">Empfohlen</option><option value="title">Titel A–Z</option><option value="level">Level</option><option value="stars">Beste Bewertung</option><option value="recent">Zuletzt gespielt</option></select>
+      </div>
+      <div class="library-layout">
+        <aside class="panel category-panel">
+          <h3>Kategorien</h3>
+          <button class="category-button active" data-category="all">Alle Songs <span id="countAll">0</span></button>
+          <button class="category-button" data-category="Grundlagen">Grundlagen</button>
+          <button class="category-button" data-category="Akkorde">Akkorde</button>
+          <button class="category-button" data-category="Rhythmus">Rhythmus</button>
+          <button class="category-button" data-category="Songkurs">Songkurse</button>
+          <button class="category-button" data-category="Kinderlied">Kinderlieder</button>
+          <button class="category-button" data-category="Favorit">Favoriten</button>
+          <button class="category-button" data-category="Import">Imports</button>
+        </aside>
+        <div class="panel library-panel">
+          <div class="library-header-row"><b id="libraryResultCount">0 Songs</b><span class="muted">Wähle einen Song für Details und Modus</span></div>
+          <div id="libraryList" class="library-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-kids" class="screen">
+      <div class="hero-card kids-hero">
+        <div><span class="eyebrow">KINDERLIEDER</span><h1>Für Kita, OGS und Zuhause</h1><p>Einfache Melodie-, Akkord- und Rhythmusübungen ohne eingeblendete Liedtexte. Mit langsamem Modus und Wiederholung einzelner Abschnitte.</p></div>
+        <div class="level-ring kids-ring"><div><strong id="kidsCount">0</strong><small>Lieder</small></div></div>
+      </div>
+      <div id="kidsGrid" class="lesson-grid spaced"></div>
+    </section>
+
+    <section id="screen-import" class="screen">
+      <div class="section-head"><div><h2>Import & legale Quellen</h2><p>Eigene Dateien, lizenzierte Daten und Favoriten hinzufügen</p></div></div>
+      <div class="import-grid">
+        <div class="panel">
+          <h3>Datei importieren</h3>
+          <label for="importType">Dateityp</label>
+          <select id="importType"><option value="midi">MIDI .mid/.midi</option><option value="tab">Text-Tab .txt</option><option value="chordpro">ChordPro .cho/.chopro/.pro</option><option value="musicxml">MusicXML .xml/.musicxml</option><option value="json">Luca JSON</option><option value="guitarpro">GuitarPro .gp/.gp3/.gp4/.gp5/.gpx</option><option value="audio">Eigene Audio-Datei</option></select>
+          <label for="importFile">Datei</label><input id="importFile" type="file">
+          <label for="importRights">Rechtsstatus</label><select id="importRights"><option value="own">Eigene Datei / eigene Aufnahme</option><option value="licensed">Legal gekauft oder lizenziert</option><option value="public-domain">Public Domain</option><option value="creative-commons">Creative Commons</option><option value="educational">Unterrichtsmaterial mit Erlaubnis</option></select>
+          <label for="importSourceNote">Quelle / Notiz</label><input id="importSourceNote" placeholder="Link, Lizenz oder Herkunft">
+          <button id="importFileBtn" class="button primary full">Importieren</button>
+          <div id="importStatus" class="status-box">Noch keine Datei importiert.</div>
+        </div>
+        <div class="panel">
+          <h3>Spotify-/YouTube-Favorit</h3>
+          <label for="favoriteTitle">Titel</label><input id="favoriteTitle" placeholder="Mein Lieblingssong">
+          <label for="favoriteUrl">Spotify- oder YouTube-Link</label><input id="favoriteUrl" placeholder="https://...">
+          <label for="favoriteChords">Akkordfolge</label><input id="favoriteChords" value="G D Em C">
+          <label for="favoriteBpm">BPM</label><input id="favoriteBpm" type="number" value="90" min="40" max="220">
+          <button id="favoriteSaveBtn" class="button primary full">Als spielbare Übung speichern</button>
+          <p class="muted">Es wird keine geschützte Audiodatei heruntergeladen. Der Link dient als Referenz; die Übung wird aus Akkorden und Tempo erzeugt.</p>
+        </div>
+        <div class="panel">
+          <h3>Legale Songquellen suchen</h3>
+          <label for="legalQuery">Suchbegriff</label><input id="legalQuery" placeholder="z. B. Amazing Grace MIDI">
+          <label for="legalSource">Quelle</label><select id="legalSource"><option value="mutopia">Mutopia Project</option><option value="imslp">IMSLP</option><option value="gutenberg">Project Gutenberg</option><option value="wikimedia">Wikimedia Commons</option><option value="web">Allgemeine Websuche</option></select>
+          <button id="legalSearchBtn" class="button secondary full">Quelle öffnen</button>
+          <p class="muted">Prüfe die konkrete Lizenz jeder Datei, besonders bei grenzüberschreitender Nutzung.</p>
+        </div>
+        <div class="panel">
+          <h3>Quellenbibliothek</h3>
+          <div id="sourceLibrary" class="source-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-tuner" class="screen">
+      <div class="panel tuner-panel">
+        <span class="eyebrow">STANDARDSTIMMUNG E A D G B e</span>
+        <h2>Stimmgerät & Mikrofonprüfung</h2>
+        <div id="micEnvironment" class="mic-environment">Mikrofonumgebung wird geprüft …</div>
+        <div id="tunerNote" class="tuner-note">–</div>
+        <div id="tunerInfo" class="muted">Mikrofon noch nicht gestartet</div>
+        <div class="tuner-scale"><div id="tunerPointer" class="tuner-pointer"></div></div>
+        <div class="tuner-meters">
+          <div class="meter-card"><span>Signalpegel</span><div class="signal-meter"><i id="micLevelBar"></i></div><b id="micLevelText">0 %</b></div>
+          <div class="meter-card"><span>Erkennungssicherheit</span><div class="signal-meter"><i id="pitchConfidenceBar"></i></div><b id="pitchConfidenceText">0 %</b></div>
+          <div class="meter-card"><span>Zielsaite</span><b id="tunerTargetString">–</b><small id="tunerTargetFrequency">Standard: E A D G B e</small></div>
+        </div>
+        <div class="button-row tuner-actions">
+          <button id="tunerMicBtn" class="button primary">🎙 Mikrofon starten</button>
+          <button id="tunerSelfTestBtn" class="button secondary">Interne Tonanalyse testen</button>
+          <button id="openSafariMicBtn" class="button secondary">Mikrofon in Safari öffnen</button>
+        </div>
+        <div id="micStatusBox" class="status-box">Bereit. Schlage nach dem Start eine einzelne Saite kräftig und möglichst sauber an.</div>
+      </div>
+    </section>
+
+    <section id="screen-settings" class="screen">
+      <div class="settings-grid">
+        <div class="panel"><h3>Barrierefreiheit</h3><label><input id="highContrastToggle" type="checkbox"> Hoher Kontrast</label><label><input id="reducedMotionToggle" type="checkbox"> Bewegungen reduzieren</label><label for="fontScale">Schriftgröße</label><input id="fontScale" type="range" min="90" max="130" value="100"></div>
+        <div class="panel"><h3>Spieler</h3><label><input id="metronomeDefault" type="checkbox" checked> Metronom standardmäßig aktiv</label><label><input id="micDefault" type="checkbox"> Mikrofon beim Start anbieten</label><label for="timingWindow">Trefferfenster</label><select id="timingWindow"><option value="180">Streng · 180 ms</option><option value="260" selected>Normal · 260 ms</option><option value="380">Locker · 380 ms</option></select></div>
+        <div class="panel network-panel"><h3>Offline & Netzwerk</h3><label class="network-switch"><input id="networkToggle" type="checkbox"> Internet-Funktionen erlauben</label><div id="networkState" class="status-box">Lokaler Offline-Modus wird geprüft …</div><button id="offlineCheckBtn" class="button secondary full">Offline-Speicher prüfen</button><p class="muted">Standardmäßig bleibt das Internet innerhalb der App ausgeschaltet. Lernen, Bibliothek, Imports, Fortschritt, Stimmgerät und Mikrofon funktionieren lokal. Nur externe Spotify-/YouTube-/Quellenlinks benötigen eine Verbindung und deine ausdrückliche Freigabe.</p></div>
+        <div class="panel install-panel"><h3>iPad-App installieren</h3><div id="installState" class="install-state">Installationsstatus wird geprüft …</div><button id="installGuideBtn" class="button primary full">Installationsschritte anzeigen</button><button id="shareInstallLinkBtn" class="button secondary full">App-Link teilen</button><p class="muted">Für die erste Installation und den Mikrofonzugriff muss die App über HTTPS geöffnet werden. Nach dem ersten vollständigen Start funktioniert der Kern offline.</p></div>
+        <div class="panel"><h3>Diagnose</h3><button id="runDiagnosticsBtn" class="button secondary full">Funktionen prüfen</button><div id="diagnosticsOutput" class="diagnostics-output">Noch keine Prüfung durchgeführt.</div></div>
+        <div class="panel"><h3>Backup</h3><button id="exportBackupBtn" class="button secondary full">Backup exportieren</button><label for="backupImport">Backup importieren</label><input id="backupImport" type="file" accept="application/json"><textarea id="backupPreview" placeholder="Exportinformationen erscheinen hier" readonly></textarea></div>
+      </div>
+    </section>
+
+    <section id="screen-detail" class="screen">
+      <button class="back-button" data-nav="library">← Zur Bibliothek</button>
+      <div id="songDetail"></div>
+    </section>
+
+    <section id="screen-player" class="screen player-screen">
+      <div class="player-header">
+        <div><span id="playerCategory" class="eyebrow">ÜBUNG</span><h2 id="playerTitle">Song</h2><div id="playerMeta" class="muted"></div></div>
+        <div class="player-controls-top">
+          <button id="speedMinus" class="circle-button">−</button>
+          <input id="speedSlider" type="range" min="50" max="150" value="100" aria-label="Spielgeschwindigkeit">
+          <button id="speedPlus" class="circle-button">+</button>
+          <strong><span id="speedValue">100</span>%</strong>
+          <button id="metronomeBtn" class="toggle-button active">Metronom</button>
+          <button id="playerMicBtn" class="toggle-button">Mikro</button>
+        </div>
+      </div>
+
+      <div class="score-strip">
+        <span>Score <b id="playerScore">0</b></span><span>Treffer <b id="playerAccuracy">0%</b></span><span>Timing <b id="playerTiming">–</b></span><span>Serie <b id="playerCombo">0</b></span>
+      </div>
+      <div id="liveFeedback" class="live-feedback">
+        <span id="liveMicDot" class="live-dot"></span>
+        <span>Live-Ton: <b id="liveDetectedNote">–</b></span>
+        <span id="livePitchDetail">Mikrofon aus</span>
+        <span>Ziel: <b id="liveTargetNote">–</b></span>
+      </div>
+
+      <div class="highway-wrap">
+        <canvas id="gameCanvas" width="1200" height="650" aria-label="Gitarren-Spielbrett"></canvas>
+        <div id="countdown" class="countdown hidden">3</div>
+      </div>
+
+      <div id="inputControls" class="input-controls"></div>
+
+      <div class="transport-panel">
+        <div class="transport-buttons">
+          <button id="playPauseBtn" class="transport-main">▶</button>
+          <button id="restartBtn" class="transport-button" title="Von vorn">↺</button>
+          <button id="backFiveBtn" class="transport-button" title="5 Sekunden zurück">−5s</button>
+          <button id="forwardFiveBtn" class="transport-button" title="5 Sekunden vor">+5s</button>
+          <button id="setLoopABtn" class="transport-button">A setzen</button>
+          <button id="setLoopBBtn" class="transport-button">B setzen</button>
+          <button id="loopToggleBtn" class="transport-button">Loop aus</button>
+        </div>
+        <div class="timeline-row">
+          <span id="currentTimeLabel">0:00</span>
+          <div class="timeline-wrap">
+            <div id="timelineMarkers" class="timeline-markers"></div>
+            <div id="timelineProgress" class="timeline-progress"></div>
+            <input id="timelineSeek" type="range" min="0" max="1000" value="0" aria-label="Songposition vor- oder zurückspulen">
+            <div id="loopRegion" class="loop-region hidden"></div>
+          </div>
+          <span id="durationLabel">0:00</span>
+        </div>
+        <div class="transport-hint">Du kannst den Fortschrittsbalken antippen, ziehen oder mit den Pfeiltasten verschieben. A/B setzt einen wiederholbaren Übungsabschnitt.</div>
+      </div>
+
+      <audio id="backingAudio" preload="metadata"></audio>
+    </section>
+  </main>
+
+  <nav class="mobile-nav" aria-label="Mobile Navigation">
+    <button data-nav="home" class="active">⌂<small>Start</small></button>
+    <button data-nav="learn">◇<small>Lernen</small></button>
+    <button data-nav="library">♫<small>Songs</small></button>
+    <button data-nav="kids">★<small>Kinder</small></button>
+    <button data-nav="tuner">⌁<small>Stimmen</small></button>
+  </nav>
+</div>
+
+<div id="installModal" class="install-modal hidden" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+  <div class="install-dialog">
+    <button id="closeInstallModal" class="install-close" aria-label="Schließen">×</button>
+    <span class="eyebrow">IPAD INSTALLATION</span>
+    <h2 id="installModalTitle">Luca Guitar Quest als App installieren</h2>
+    <ol class="install-steps">
+      <li>Öffne die HTTPS-Adresse dieser App in <b>Safari</b>.</li>
+      <li>Tippe oben auf <b>Teilen</b> (Quadrat mit Pfeil).</li>
+      <li>Wähle <b>Zum Home-Bildschirm</b>.</li>
+      <li>Aktiviere <b>Als Web-App öffnen</b> und tippe auf <b>Hinzufügen</b>.</li>
+      <li>Starte die App anschließend einmal vollständig online über das neue Symbol, damit alle Kerndateien offline gespeichert werden.</li>
+      <li>Danach kannst du unter <b>Einstellungen → Offline & Netzwerk</b> den lokalen Offline-Modus verwenden.</li>
+    </ol>
+    <div id="installModalStatus" class="status-box"></div>
+    <div class="button-row">
+      <button id="copyAppUrlBtn" class="button primary">Adresse kopieren</button>
+      <button id="closeInstallModalBottom" class="button secondary">Verstanden</button>
+    </div>
+  </div>
+</div>
+<div id="orientationHint" class="orientation-hint hidden">Für den Spielmodus funktioniert die App im Querformat am besten.</div>
+<script src="app.js"></script>
+</body>
+</html>

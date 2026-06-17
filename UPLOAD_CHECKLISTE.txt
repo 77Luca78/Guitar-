@@ -1,0 +1,13 @@
+UPLOAD-CHECKLISTE
+[ ] Neues Repository erstellt
+[ ] Repository ist Public (nur falls der Code öffentlich sein darf)
+[ ] Alle Dateien aus diesem Ordner hochgeladen
+[ ] index.html liegt direkt auf der ersten Ebene
+[ ] Commit changes ausgeführt
+[ ] Settings > Pages geöffnet
+[ ] Deploy from a branch gewählt
+[ ] main und /(root) gewählt
+[ ] GitHub-Pages-Adresse geöffnet
+[ ] Safari: Zum Home-Bildschirm
+[ ] Mikrofon erlaubt
+[ ] Offline-Speicher geprüft
