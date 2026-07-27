@@ -143,23 +143,7 @@ async function migrateLegacy(){
   }
 }
 function legacyToModes(s){if(s.type==='chords'&&s.chords)return{chords:chordEvents(s.chords,s.bpm||90,4)};if(s.notes)return{melody:melodyEvents(s.notes,s.bpm||90)};return{rhythm:rhythmEvents('D D U U D U',s.bpm||90,4)}}
-async function registerSW(){
-  if(!('serviceWorker' in navigator)) return;
-  try{
-    const registration=await navigator.serviceWorker.register('./service-worker.js',{scope:'./'});
-    registration.update().catch(()=>{});
-    registration.addEventListener('updatefound',()=>{
-      const worker=registration.installing;
-      worker?.addEventListener('statechange',()=>{
-        if(worker.state==='installed'&&navigator.serviceWorker.controller){
-          console.info('[Luca Guitar Quest] Neue Offline-Version ist beim nächsten Start aktiv.');
-        }
-      });
-    });
-  }catch(error){
-    console.warn('[Luca Guitar Quest] Offline-Modus konnte nicht registriert werden.',error);
-  }
-}
+function registerSW(){if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(()=>{})}
 
 function bindNavigation(){
   $$('[data-nav]').forEach(btn=>btn.addEventListener('click',()=>openScreen(btn.dataset.nav)));

@@ -1,9 +1,5 @@
-'use strict';
-
-const CACHE_VERSION = 'v4-premium-stable';
-const CACHE_NAME = `luca-guitar-${CACHE_VERSION}`;
-
-const REQUIRED_ASSETS = [
+const CACHE_VERSION = 'luca-guitar-v4-premium-stable';
+const CORE = [
   './',
   './index.html',
   './styles.css',
@@ -12,8 +8,7 @@ const REQUIRED_ASSETS = [
   './manifest.json',
   './icon.svg'
 ];
-
-const OPTIONAL_ASSETS = [
+const OPTIONAL = [
   './personal_catalog.json',
   './icon-180.png',
   './icon-192.png',
@@ -23,65 +18,47 @@ const OPTIONAL_ASSETS = [
   './ipad-pro-13-landscape.png'
 ];
 
-async function cacheAssetsIndividually(cache, assets) {
-  await Promise.allSettled(
-    assets.map(async asset => {
-      const response = await fetch(asset, { cache: 'reload' });
-      if (!response.ok) throw new Error(`${asset}: HTTP ${response.status}`);
-      await cache.put(asset, response);
-    })
-  );
-}
-
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil((async () => {
-    const cache = await caches.open(CACHE_NAME);
-    // Kerndateien müssen vorhanden sein. Optionale Bilder dürfen die Installation
-    // dagegen nicht vollständig blockieren.
-    await cache.addAll(REQUIRED_ASSETS);
-    await cacheAssetsIndividually(cache, OPTIONAL_ASSETS);
-    await self.skipWaiting();
+    const cache = await caches.open(CACHE_VERSION);
+    await cache.addAll(CORE);
+    await Promise.allSettled(
+      OPTIONAL.map(async url => {
+        const response = await fetch(url, { cache: 'reload' });
+        if (response.ok) await cache.put(url, response);
+      })
+    );
   })());
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(
-      keys
-        .filter(key => key.startsWith('luca-guitar-') && key !== CACHE_NAME)
-        .map(key => caches.delete(key))
-    );
+    await Promise.all(keys.filter(key => key !== CACHE_VERSION).map(key => caches.delete(key)));
     await self.clients.claim();
   })());
 });
 
 async function networkFirst(request, fallbackUrl) {
-  const cache = await caches.open(CACHE_NAME);
+  const cache = await caches.open(CACHE_VERSION);
   try {
     const response = await fetch(request, { cache: 'no-store' });
-    if (response && response.ok) await cache.put(fallbackUrl || request, response.clone());
+    if (response && response.ok) await cache.put(request, response.clone());
     return response;
-  } catch (error) {
-    return (await cache.match(request)) ||
-      (fallbackUrl ? await cache.match(fallbackUrl) : null) ||
-      new Response('Offline. Bitte die App einmal vollständig online starten.', {
-        status: 503,
-        headers: { 'Content-Type': 'text/plain; charset=utf-8' }
-      });
+  } catch {
+    return (await cache.match(request)) || (fallbackUrl ? await cache.match(fallbackUrl) : null);
   }
 }
 
 async function staleWhileRevalidate(request) {
-  const cache = await caches.open(CACHE_NAME);
+  const cache = await caches.open(CACHE_VERSION);
   const cached = await cache.match(request);
-  const update = fetch(request)
-    .then(response => {
-      if (response && response.ok) cache.put(request, response.clone());
-      return response;
-    })
-    .catch(() => null);
-  return cached || await update || new Response('', { status: 504 });
+  const update = fetch(request).then(async response => {
+    if (response && response.ok) await cache.put(request, response.clone());
+    return response;
+  }).catch(() => null);
+  return cached || await update || new Response('', { status: 504, statusText: 'Offline' });
 }
 
 self.addEventListener('fetch', event => {
@@ -92,21 +69,20 @@ self.addEventListener('fetch', event => {
   if (url.origin !== self.location.origin) return;
 
   if (request.mode === 'navigate') {
-    event.respondWith(networkFirst(request, './index.html'));
+    event.respondWith((async () => {
+      const response = await networkFirst(request, './index.html');
+      return response || new Response(
+        'Offline. Bitte die App einmal vollständig online starten.',
+        { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } }
+      );
+    })());
     return;
   }
 
-  if (['script', 'style', 'worker'].includes(request.destination)) {
-    event.respondWith(networkFirst(request));
-    return;
-  }
-
-  event.respondWith(staleWhileRevalidate(request));
+  const isCode = /\.(?:js|css|json)$/.test(url.pathname);
+  event.respondWith(isCode ? networkFirst(request) : staleWhileRevalidate(request));
 });
 
 self.addEventListener('message', event => {
-  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
-  if (event.data?.type === 'CLEAR_APP_CACHE') {
-    event.waitUntil(caches.delete(CACHE_NAME));
-  }
+  if (event.data === 'SKIP_WAITING') self.skipWaiting();
 });
