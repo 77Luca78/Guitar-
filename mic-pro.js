@@ -56,6 +56,7 @@
   let recordingPausedTotal = 0;
   let recordingTimer = null;
   let lastRecordingUrl = '';
+  let recordingListUrls = [];
   let lastRecordingBlob = null;
   let previousRms = 0;
   let lastOnsetAt = 0;
@@ -589,10 +590,11 @@
   }
   async function loadRecordings(){
     const box=document.getElementById('micProRecordings');if(!box)return;
+    recordingListUrls.forEach(url=>URL.revokeObjectURL(url));recordingListUrls=[];
     const records=(await getRecordings()).sort((a,b)=>String(b.created).localeCompare(String(a.created))).slice(0,12);
     if(!records.length){box.innerHTML='<div class="mic-pro-status">Noch keine gespeicherten Aufnahmen.</div>';return}
     box.innerHTML='<h4>Gespeicherte Aufnahmen</h4>'+records.map(r=>{
-      const url=URL.createObjectURL(r.blob);
+      const url=URL.createObjectURL(r.blob);recordingListUrls.push(url);
       return `<div class="mic-pro-recording-item"><div><b>${escapeHtml(r.title)}</b><small style="display:block;color:#9fa8af">${new Date(r.created).toLocaleString('de-DE')} · ${formatDuration(r.durationMs)}</small><audio controls src="${url}"></audio></div><div class="mic-pro-actions"><button class="mic-pro-btn" data-rec-download="${r.id}">↓</button><button class="mic-pro-btn danger" data-rec-delete="${r.id}">×</button></div></div>`
     }).join('');
     box.querySelectorAll('[data-rec-download]').forEach(btn=>btn.onclick=()=>{const r=records.find(x=>x.id===btn.dataset.recDownload);if(r)downloadBlob(r.blob,r)});
@@ -631,7 +633,11 @@
 
   function init(){
     injectUI();wrapPlayerToggle();wrapFinishAttempt();observeUi();
-    window.addEventListener('beforeunload',()=>{if(mediaRecorder?.state==='recording')stopRecording()});
+    window.addEventListener('beforeunload',()=>{
+      if(mediaRecorder?.state==='recording')stopRecording();
+      recordingListUrls.forEach(url=>URL.revokeObjectURL(url));
+      if(lastRecordingUrl)URL.revokeObjectURL(lastRecordingUrl);
+    });
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&mediaRecorder?.state==='recording'&&!state.player.playing)stopRecording()});
     console.info(`[Luca Guitar Quest] Mikrofon Pro ${VERSION} geladen.`);
   }
