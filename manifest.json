@@ -1,8 +1,8 @@
 {
   "id": "./index.html",
-  "name": "Luca Guitar Quest Studio Pro · Offline iPad Edition",
-  "short_name": "Guitar Quest",
-  "description": "Offlinefähige Gitarrenlern-App für das iPad mit lokaler Bibliothek, Lernpfad, Live-Mikrofonfeedback, Stimmgerät, Timing, Imports und optionalen Internetlinks.",
+  "name": "Luca Guitar Quest · Interactive Play 3.0",
+  "short_name": "Guitar Quest 3",
+  "description": "Offlinefähige Gitarrenlern-App mit animierter Sechs-Saiten-Spielspur, Mikrofonfeedback, Lern-, Spiel- und Kita-Modus.",
   "lang": "de-DE",
   "dir": "ltr",
   "start_url": "./index.html?source=pwa",
@@ -13,8 +13,8 @@
     "fullscreen"
   ],
   "orientation": "any",
-  "background_color": "#111317",
-  "theme_color": "#111317",
+  "background_color": "#05080d",
+  "theme_color": "#07111b",
   "categories": [
     "education",
     "music",

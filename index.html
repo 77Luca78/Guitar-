@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#15181c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Luca Guitar Quest Studio Pro · iPad Offline</title>
+  <title>Luca Guitar Quest · Interactive Play 3.0</title>
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Luca Guitar Quest">
@@ -26,7 +26,7 @@
     <div class="topbar-inner">
       <button class="brand" data-nav="home" aria-label="Startseite öffnen">
         <span class="brand-logo">LQ</span>
-        <span><strong>Luca Guitar Quest</strong><small>Studio Pro · Offline</small></span>
+        <span><strong>Luca Guitar Quest</strong><small>Interactive Play 3.0 · Offline</small></span>
       </button>
       <nav class="desktop-nav" aria-label="Hauptnavigation">
         <button data-nav="home" class="active">⌂ Startseite</button>
@@ -194,37 +194,57 @@
 
     <section id="screen-player" class="screen player-screen">
       <div class="player-header">
-        <div><span id="playerCategory" class="eyebrow">ÜBUNG</span><h2 id="playerTitle">Song</h2><div id="playerMeta" class="muted"></div></div>
+        <div>
+          <span id="playerCategory" class="eyebrow">INTERACTIVE PLAY</span>
+          <h2 id="playerTitle">Song</h2>
+          <div id="playerMeta" class="muted"></div>
+        </div>
         <div class="player-controls-top">
-          <button id="speedMinus" class="circle-button">−</button>
+          <label class="player-mode-picker">Spielart
+            <select id="sessionModeSelect" aria-label="Spielart wählen">
+              <option value="learn">Lernmodus</option>
+              <option value="practice" selected>Übungsmodus</option>
+              <option value="play">Spielmodus</option>
+              <option value="kids">Kita-Modus</option>
+            </select>
+          </label>
+          <button id="speedMinus" class="circle-button" aria-label="Tempo senken">−</button>
           <input id="speedSlider" type="range" min="50" max="150" value="100" aria-label="Spielgeschwindigkeit">
-          <button id="speedPlus" class="circle-button">+</button>
+          <button id="speedPlus" class="circle-button" aria-label="Tempo erhöhen">+</button>
           <strong><span id="speedValue">100</span>%</strong>
           <button id="metronomeBtn" class="toggle-button active">Metronom</button>
           <button id="playerMicBtn" class="toggle-button">Mikro</button>
+          <button id="latencyCalibrateBtn" class="toggle-button">Latenz messen</button>
+          <span id="latencyValue" class="latency-chip">0 ms</span>
         </div>
       </div>
 
       <div class="score-strip">
-        <span>Score <b id="playerScore">0</b></span><span>Treffer <b id="playerAccuracy">0%</b></span><span>Timing <b id="playerTiming">–</b></span><span>Serie <b id="playerCombo">0</b></span>
+        <span>Score <b id="playerScore">0</b></span>
+        <span>Treffer <b id="playerAccuracy">0%</b></span>
+        <span>Timing <b id="playerTiming">–</b></span>
+        <span>Serie <b id="playerCombo">0</b></span>
+        <span>Bestserie <b id="playerBestCombo">0</b></span>
       </div>
-      <div id="liveFeedback" class="live-feedback">
-        <span id="liveMicDot" class="live-dot"></span>
-        <span>Live-Ton: <b id="liveDetectedNote">–</b></span>
-        <span id="livePitchDetail">Mikrofon aus</span>
-        <span>Ziel: <b id="liveTargetNote">–</b></span>
+
+      <div class="practice-hud" aria-live="polite">
+        <div><small>JETZT</small><b id="nowTarget">Bereit</b><span id="nowHint">Starte die Runde</span></div>
+        <div><small>DANACH</small><b id="nextTarget">–</b><span id="nextHint">Nächster Spielschritt</span></div>
+        <div class="mic-hud"><span id="liveMicDot" class="live-dot"></span><small>LIVE</small><b id="liveDetectedNote">–</b><span id="livePitchDetail">Mikrofon aus</span></div>
       </div>
 
       <div class="highway-wrap">
-        <canvas id="gameCanvas" width="1200" height="650" aria-label="Gitarren-Spielbrett"></canvas>
+        <canvas id="gameCanvas" width="1200" height="720" aria-label="Animierte Gitarren-Spielspur mit sechs Saiten"></canvas>
         <div id="countdown" class="countdown hidden">3</div>
+        <div id="hitFeedback" class="hit-feedback hidden">Perfekt</div>
+        <div id="learningWait" class="learning-wait hidden"><b>Ich warte auf dich</b><span id="learningWaitText">Spiele den angezeigten Ton.</span></div>
       </div>
 
       <div id="inputControls" class="input-controls"></div>
 
       <div class="transport-panel">
         <div class="transport-buttons">
-          <button id="playPauseBtn" class="transport-main">▶</button>
+          <button id="playPauseBtn" class="transport-main" aria-label="Start oder Pause">▶</button>
           <button id="restartBtn" class="transport-button" title="Von vorn">↺</button>
           <button id="backFiveBtn" class="transport-button" title="5 Sekunden zurück">−5s</button>
           <button id="forwardFiveBtn" class="transport-button" title="5 Sekunden vor">+5s</button>
@@ -242,7 +262,14 @@
           </div>
           <span id="durationLabel">0:00</span>
         </div>
-        <div class="transport-hint">Du kannst den Fortschrittsbalken antippen, ziehen oder mit den Pfeiltasten verschieben. A/B setzt einen wiederholbaren Übungsabschnitt.</div>
+        <div class="transport-hint">Querformat empfohlen. Im Lernmodus wartet die Spur auf den richtigen Ton. A/B wiederholt gezielt einen Abschnitt.</div>
+      </div>
+
+      <div id="practiceAnalysis" class="practice-analysis hidden" aria-live="polite">
+        <div><small>SCHWIERIGSTE STELLE</small><b id="hardSpotLabel">–</b><span id="hardSpotDetail">Noch keine Auswertung</span></div>
+        <button id="practiceHardSpotBtn" class="button secondary">Stelle wiederholen</button>
+        <div><small>TEMPO-EMPFEHLUNG</small><b id="adaptiveTempoLabel">100%</b><span id="adaptiveTempoDetail">Nach der Runde</span></div>
+        <button id="applyAdaptiveTempoBtn" class="button primary">Tempo übernehmen</button>
       </div>
 
       <audio id="backingAudio" preload="metadata"></audio>

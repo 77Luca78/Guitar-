@@ -139,3 +139,29 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+
+/* Interactive Play 3.0 */
+.player-screen{background:radial-gradient(circle at 50% -10%,#173b54 0,#09131f 38%,#05080d 100%);min-height:calc(100vh - 84px);color:#fff}
+.player-header{background:rgba(5,10,18,.88);border-bottom:1px solid rgba(255,255,255,.12)}
+.player-controls-top{background:rgba(15,28,42,.9);border:1px solid rgba(255,255,255,.12)}
+.player-mode-picker{display:grid;gap:.2rem;color:#b9cad8;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.player-mode-picker select{background:#08121d;color:#fff;border:1px solid #40576a;border-radius:10px;padding:.48rem .65rem;min-width:132px}
+.latency-chip{border:1px solid rgba(255,255,255,.18);background:#07111b;border-radius:999px;padding:.55rem .7rem;color:#8fffe2;font-variant-numeric:tabular-nums}
+.score-strip{background:rgba(4,10,20,.92);font-variant-numeric:tabular-nums}
+.practice-hud{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,.12);border-bottom:1px solid rgba(255,255,255,.14)}
+.practice-hud>div{display:grid;grid-template-columns:auto 1fr;gap:.15rem .65rem;align-items:center;background:rgba(5,13,24,.92);padding:.7rem 1rem;min-width:0}
+.practice-hud small{color:#7ddfc8;font-size:.68rem;font-weight:900;letter-spacing:.12em}.practice-hud b{font-size:1.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.practice-hud span{grid-column:2;color:#aebdca;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mic-hud .live-dot{grid-row:1/3;grid-column:1;width:13px;height:13px}
+.highway-wrap{position:relative;min-height:590px;background:linear-gradient(#06101b,#020406);overflow:hidden;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.12)}
+.highway-wrap canvas{display:block;width:100%;height:590px;touch-action:none}
+.hit-feedback{position:absolute;left:50%;top:68%;transform:translate(-50%,-50%);z-index:4;padding:.55rem 1rem;border-radius:999px;background:rgba(6,20,24,.88);border:2px solid #67ffd0;font-size:clamp(1.3rem,3vw,2.3rem);font-weight:1000;text-shadow:0 2px 12px #000;pointer-events:none}
+.hit-feedback.good{border-color:#64c9ff}.hit-feedback.early,.hit-feedback.late{border-color:#ffd36a}.hit-feedback.miss{border-color:#ff6f86}
+.learning-wait{position:absolute;inset:auto 50% 5.5rem auto;transform:translateX(50%);z-index:5;display:grid;text-align:center;background:rgba(6,15,25,.94);border:1px solid #67ffd0;border-radius:18px;padding:.8rem 1.2rem;min-width:min(90%,360px)}.learning-wait b{font-size:1.15rem}.learning-wait span{color:#b9cad8;margin-top:.2rem}
+.input-controls{background:#07121f;border-top:1px solid rgba(255,255,255,.1)}.input-button{background:#10263c;border-color:#52718b}.input-button.hit{background:#50e29b}.input-button.wrong{background:#ff657c}
+.transport-panel{background:#081421}.transport-button{background:#102b45}.transport-main{color:#072136}.timeline-markers{opacity:.6}
+.practice-analysis{display:grid;grid-template-columns:minmax(190px,1fr) auto minmax(190px,1fr) auto;gap:.75rem;align-items:center;background:#0b1824;border-top:1px solid rgba(255,255,255,.13);padding:1rem}.practice-analysis>div{display:grid}.practice-analysis small{color:#7ddfc8;font-weight:900;letter-spacing:.08em}.practice-analysis b{font-size:1.1rem}.practice-analysis span{color:#aebdca;font-size:.82rem;margin-top:.15rem}
+body.reduced-motion .hit-feedback{transition:none}
+@media(max-width:980px){.practice-hud{grid-template-columns:1fr 1fr}.practice-hud .mic-hud{grid-column:1/-1}.practice-analysis{grid-template-columns:1fr auto}.highway-wrap,.highway-wrap canvas{height:540px;min-height:540px}}
+@media(max-width:620px){.practice-hud{grid-template-columns:1fr}.practice-hud .mic-hud{grid-column:auto}.practice-analysis{grid-template-columns:1fr}.practice-analysis .button{width:100%}.highway-wrap,.highway-wrap canvas{height:500px;min-height:500px}.player-mode-picker{width:100%}.player-mode-picker select{width:100%}}
+@media (min-width:1000px) and (orientation:landscape){.highway-wrap,.highway-wrap canvas{height:62dvh;min-height:560px;max-height:760px}}
