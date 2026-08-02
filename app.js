@@ -9,12 +9,14 @@ const formatTime = ms => {
   return `${Math.floor(total / 60)}:${String(total % 60).padStart(2,'0')}`;
 };
 
+const APP_CACHE_PREFIX = 'luca-guitar-interactive-';
+
 const STRINGS = [
   {name:'E',midi:40,freq:82.41,color:'#ff657c'},
   {name:'A',midi:45,freq:110.00,color:'#ffb84c'},
   {name:'D',midi:50,freq:146.83,color:'#50e29b'},
   {name:'G',midi:55,freq:196.00,color:'#10b8ff'},
-  {name:'B',midi:59,freq:246.94,color:'#b69bff'},
+  {name:'H',midi:59,freq:246.94,color:'#b69bff'},
   {name:'e',midi:64,freq:329.63,color:'#ff9f66'}
 ];
 const CHORD_TONES = {
@@ -99,7 +101,7 @@ const DB = {
 const state = {
   songs:[],customSongs:[],sources:[],progress:{id:'global',xp:0,streak:0,lastPlayed:[],songResults:{}},settings:{id:'ui',highContrast:false,reducedMotion:false,fontScale:100,metronome:true,micDefault:false,timingWindow:260,networkEnabled:false,latencyOffsetMs:0,sessionMode:'practice'},
   category:'all',learnFilter:'all',detailSong:null,detailMode:null,
-  player:{song:null,mode:null,sessionMode:'practice',events:[],durationMs:0,positionMs:0,playing:false,countingDown:false,lastFrame:0,speed:1,score:0,hits:0,misses:0,wrong:0,combo:0,bestCombo:0,timing:[],judged:new Map(),metronome:true,mic:false,lastBeat:-1,loopA:null,loopB:null,loopOn:false,seeking:false,finished:false,audioUrl:null,waitingForEvent:null,hardSpots:new Map(),recommendedSpeed:1,hardestSpot:null}
+  player:{song:null,mode:null,sessionMode:'practice',events:[],durationMs:0,positionMs:0,playing:false,countingDown:false,countdownInterval:null,countdownTimeout:null,lastFrame:0,speed:1,score:0,hits:0,misses:0,wrong:0,combo:0,bestCombo:0,timing:[],judged:new Map(),metronome:true,mic:false,lastBeat:-1,loopA:null,loopB:null,loopOn:false,seeking:false,finished:false,audioUrl:null,waitingForEvent:null,hardSpots:new Map(),recommendedSpeed:1,hardestSpot:null}
 };
 
 function getResult(songId,mode){return state.progress.songResults?.[`${songId}:${mode}`]||null}
@@ -112,7 +114,7 @@ function songDuration(song,mode){const events=song.modes?.[mode]||[];return even
 function fallbackRead(key,defaultValue){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):defaultValue}catch{return defaultValue}}
 function fallbackWrite(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch{return false}}
 function mergeSongSets(...sets){const map=new Map();for(const set of sets)for(const song of set||[])if(song?.id)map.set(song.id,song);return [...map.values()]}
-function pausePlayerForNavigation(){const p=state.player;if(!p?.playing)return;p.playing=false;p.lastFrame=0;releaseWakeLock();document.body.classList.remove('player-active');const audio=$('#backingAudio');if(audio?.src)audio.pause();const btn=$('#playPauseBtn');if(btn)btn.textContent='▶'}
+function pausePlayerForNavigation(){const p=state.player;cancelCountdown();if(!p?.playing)return;p.playing=false;p.lastFrame=0;releaseWakeLock();document.body.classList.remove('player-active');const audio=$('#backingAudio');if(audio?.src)audio.pause();const btn=$('#playPauseBtn');if(btn)btn.textContent='▶'}
 
 async function init(){
   try{await DB.open()}catch(err){console.warn('IndexedDB nicht verfügbar; LocalStorage-Ersatz wird verwendet.',err?.message||err)}
@@ -239,8 +241,8 @@ function bindPlayer(){
   window.addEventListener('resize',drawHighway);
 }
 async function startPlayer(song,mode){
-  const p=state.player;if(p.audioUrl){URL.revokeObjectURL(p.audioUrl);p.audioUrl=null}const oldAudio=$('#backingAudio');oldAudio.pause();oldAudio.removeAttribute('src');oldAudio.load();
-  p.song=song;p.mode=mode;p.sessionMode=state.settings.sessionMode||'practice';p.events=(song.modes[mode]||[]).map(e=>({...e}));p.durationMs=songDuration(song,mode);p.positionMs=0;p.playing=false;p.countingDown=false;p.lastFrame=0;p.speed=p.sessionMode==='kids'?.8:1;p.score=0;p.hits=0;p.misses=0;p.wrong=0;p.combo=0;p.bestCombo=0;p.timing=[];p.judged=new Map();p.lastBeat=-1;p.loopA=null;p.loopB=null;p.loopOn=false;p.finished=false;p.audioUrl=null;p.waitingForEvent=null;p.hardSpots=new Map();p.hardestSpot=null;p.recommendedSpeed=p.speed;
+  const p=state.player;cancelCountdown();if(p.audioUrl){URL.revokeObjectURL(p.audioUrl);p.audioUrl=null}const oldAudio=$('#backingAudio');oldAudio.pause();oldAudio.removeAttribute('src');oldAudio.load();
+  p.song=song;p.mode=mode;p.sessionMode=state.settings.sessionMode||'practice';p.events=(song.modes[mode]||[]).map(e=>({...e}));p.durationMs=songDuration(song,mode);p.positionMs=0;p.playing=false;p.countingDown=false;p.countdownInterval=null;p.countdownTimeout=null;p.lastFrame=0;p.speed=p.sessionMode==='kids'?.8:1;p.score=0;p.hits=0;p.misses=0;p.wrong=0;p.combo=0;p.bestCombo=0;p.timing=[];p.judged=new Map();p.lastBeat=-1;p.loopA=null;p.loopB=null;p.loopOn=false;p.finished=false;p.audioUrl=null;p.waitingForEvent=null;p.hardSpots=new Map();p.hardestSpot=null;p.recommendedSpeed=p.speed;
   $('#playerTitle').textContent=song.title;$('#playerCategory').textContent=`${song.category} · ${modeLabel(mode)}`;$('#playerMeta').textContent=`${song.bpm} BPM · ${song.timeSig||'4/4'} · Level ${song.difficulty}`;$('#sessionModeSelect').value=p.sessionMode;$('#speedSlider').value=Math.round(p.speed*100);$('#speedValue').textContent=Math.round(p.speed*100);$('#timelineSeek').max=p.durationMs;$('#timelineSeek').value=0;$('#durationLabel').textContent=formatTime(p.durationMs);$('#currentTimeLabel').textContent='0:00';$('#timelineProgress').style.width='0%';$('#latencyValue').textContent=`${Math.round(state.settings.latencyOffsetMs||0)} ms`;$('#practiceAnalysis').classList.add('hidden');$('#learningWait').classList.add('hidden');$('#hitFeedback').classList.add('hidden');
   p.metronome=state.settings.metronome;$('#metronomeBtn').classList.toggle('active',p.metronome);$('#playPauseBtn').textContent='▶';$('#loopToggleBtn').textContent='Loop aus';$('#loopToggleBtn').classList.remove('active');applySessionMode();renderInputControls();renderTimelineMarkers();renderPlayerStats();renderLoopRegion();openScreen('player');updatePlayerUI();drawHighway();
   if(song.audioId)await loadSongAudio(song.audioId);
@@ -266,7 +268,8 @@ function applySessionMode(){
   $('#nowHint').textContent=descriptions[mode]||descriptions.practice;
 }
 function togglePlay(){
-  const p=state.player;if(!p.song||p.countingDown)return;
+  const p=state.player;if(!p.song)return;
+  if(p.countingDown){cancelCountdown();return}
   if(p.waitingForEvent){p.waitingForEvent=null;$('#learningWait').classList.add('hidden')}
   if(p.positionMs>=p.durationMs-20)seekTo(0,true);
   if(!p.playing&&p.positionMs<50){startCountdown();return}
@@ -277,9 +280,26 @@ function setPlayerRunning(running){
   const audio=$('#backingAudio');if(running&&audio.src){audio.playbackRate=p.speed;audio.currentTime=p.positionMs/1000;audio.play().catch(()=>{})}else if(audio.src)audio.pause();
   if(running){requestWakeLock();document.body.classList.add('player-active');requestAnimationFrame(playerLoop)}else{releaseWakeLock();document.body.classList.remove('player-active')}
 }
+function cancelCountdown(){
+  const p=state.player,el=$('#countdown');
+  if(p.countdownInterval!==null)clearInterval(p.countdownInterval);
+  if(p.countdownTimeout!==null)clearTimeout(p.countdownTimeout);
+  p.countdownInterval=null;p.countdownTimeout=null;p.countingDown=false;
+  if(el){el.classList.add('hidden');el.textContent=''}
+}
 function startCountdown(){
-  const p=state.player,el=$('#countdown');p.countingDown=true;el.classList.remove('hidden');let count=3;el.textContent=count;playCountClick(true);
-  const timer=setInterval(()=>{count--;if(count>0){el.textContent=count;playCountClick(count===1);return}clearInterval(timer);el.textContent='LOS';playCountClick(true);setTimeout(()=>{el.classList.add('hidden');p.countingDown=false;setPlayerRunning(true)},420)},700)
+  const p=state.player,el=$('#countdown');if(!el)return;
+  cancelCountdown();p.countingDown=true;el.classList.remove('hidden');let count=3;el.textContent=count;playCountClick(true);
+  p.countdownInterval=setInterval(()=>{
+    count--;
+    if(count>0){el.textContent=count;playCountClick(count===1);return}
+    clearInterval(p.countdownInterval);p.countdownInterval=null;el.textContent='LOS';playCountClick(true);
+    p.countdownTimeout=setTimeout(()=>{
+      p.countdownTimeout=null;
+      if(!p.countingDown||!$('#screen-player')?.classList.contains('active')){cancelCountdown();return}
+      el.classList.add('hidden');p.countingDown=false;setPlayerRunning(true)
+    },420)
+  },700)
 }
 function playCountClick(accent=false){try{ensureAudioContext();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=accent?1100:760;g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.14,audioCtx.currentTime+.004);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.08);o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.09)}catch{}}
 function setSpeed(speed){state.player.speed=speed;$('#speedValue').textContent=Math.round(speed*100);const audio=$('#backingAudio');if(audio.src)audio.playbackRate=speed}
@@ -496,7 +516,7 @@ async function finishLatencyCalibration(){
   const sorted=[...data.diffs].sort((a,b)=>a-b),medianDelay=sorted[Math.floor(sorted.length/2)];state.settings.latencyOffsetMs=clamp(Math.round(medianDelay),0,350);await saveSettings(false);$('#latencyValue').textContent=`${state.settings.latencyOffsetMs} ms`;showFeedback(`Latenz ${state.settings.latencyOffsetMs} ms`,'perfect',1500)
 }
 function nearestStringAndFret(midi){let best={string:0,fret:0,diff:999};STRINGS.forEach((s,i)=>{for(let fret=0;fret<=24;fret++){const diff=Math.abs(s.midi+fret-midi);if(diff<best.diff)best={string:i,fret,diff}}});return best}
-function noteName(midi){return ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'][((midi%12)+12)%12]}
+function noteName(midi){return ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','H'][((midi%12)+12)%12]}
 function detectChord(){
   if(!freqData||!audioCtx||!analyser)return null;const chroma=new Array(12).fill(0),binHz=audioCtx.sampleRate/analyser.fftSize;for(let bin=2;bin<freqData.length;bin++){const mag=freqData[bin];if(mag<55)continue;const freq=bin*binHz;if(freq<70||freq>1400)continue;const midi=Math.round(69+12*Math.log2(freq/440));chroma[((midi%12)+12)%12]+=mag}
   let best=null,bestScore=0;for(const [name,tones] of Object.entries(CHORD_TONES)){const inside=tones.reduce((sum,t)=>sum+chroma[t],0),outside=chroma.reduce((sum,v,i)=>sum+(tones.includes(i)?0:v),0),score=inside/(inside+outside*.55+1);if(score>bestScore){bestScore=score;best=name}}return bestScore>.5?best:null
@@ -601,7 +621,7 @@ async function runDiagnostics(){
   for(const [name,fn] of [['ChordPro',()=>parseChordPro('{title: Test}\n[G] [D] [Em] [C]','test.cho')],['Text-Tab',()=>parseTextTab('e|--0--|\nB|--1--|\nG|--0--|\nD|--2--|\nA|--3--|\nE|-----|','test.txt')],['MusicXML',()=>parseMusicXML('<?xml version="1.0"?><score-partwise><part><measure><attributes><divisions>1</divisions></attributes><note><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration></note></measure></part></score-partwise>','test.musicxml')],['Luca JSON',()=>parseLucaJSON('{"title":"Test","modes":{"rhythm":[]}}')]]){
     try{const parsed=fn();test(`${name}-Parser`,!!parsed)}catch(err){test(`${name}-Parser`,false,err.message)}
   }
-  test('MIDI-Parser vorhanden',typeof parseMidiFile==='function');('serviceWorker'in navigator)?test('Service Worker',true,'Schnittstelle vorhanden'):warn('Service Worker','nur über HTTPS/localhost aktiv');test('Offline-/Netzwerkmodus',typeof openExternalUrl==='function'&&typeof updateNetworkUI==='function',networkModeLabel());if('caches'in window){const cacheKeys=await caches.keys();const ready=cacheKeys.some(k=>k.startsWith('luca-guitar-interactive-'));ready?test('Offline-Kerncache',true,cacheKeys.join(', ')):warn('Offline-Kerncache','App einmal online neu laden, damit alle Kerndateien gespeichert werden')}
+  test('MIDI-Parser vorhanden',typeof parseMidiFile==='function');('serviceWorker'in navigator)?test('Service Worker',true,'Schnittstelle vorhanden'):warn('Service Worker','nur über HTTPS/localhost aktiv');test('Offline-/Netzwerkmodus',typeof openExternalUrl==='function'&&typeof updateNetworkUI==='function',networkModeLabel());if('caches'in window){const cacheKeys=await caches.keys();const ready=cacheKeys.some(k=>k.startsWith(APP_CACHE_PREFIX));ready?test('Offline-Kerncache',true,cacheKeys.join(', ')):warn('Offline-Kerncache','App einmal online neu laden, damit alle Kerndateien gespeichert werden')}
   const failures=results.filter(r=>r.startsWith('✗')).length;results.unshift(failures?`Prüfung abgeschlossen: ${failures} Problem(e) gefunden.`:'Prüfung abgeschlossen: keine internen Funktionsfehler erkannt.');
   $('#diagnosticsOutput').textContent=results.join('\n');return{failures,results};
 }
@@ -651,17 +671,17 @@ async function openExternalUrl(url,label='Externer Link'){
   return !!win;
 }
 async function checkOfflineReadiness(){
-  const lines=[];
+  const lines=[];let serviceWorkerReady=false,cacheReady=false;
   lines.push(`App-Modus: ${isStandaloneMode()?'installierte Home-Bildschirm-App':'Safari/Browser'}`);
   lines.push(`Verbindung: ${navigator.onLine===false?'offline':'online'}`);
   lines.push(`Internet-Funktionen: ${state.settings.networkEnabled?'erlaubt':'ausgeschaltet'}`);
   if(!('serviceWorker'in navigator)){lines.push('✗ Service Worker wird von diesem Browser nicht angeboten.');alert(lines.join('\n'));return false}
   try{
-    const reg=await navigator.serviceWorker.getRegistration();
-    lines.push(reg?'✓ Service Worker registriert':'! Service Worker noch nicht aktiv – Seite einmal online neu laden.');
-    if('caches'in window){const keys=await caches.keys();lines.push(keys.some(k=>k.startsWith('luca-guitar-ipad-offline-'))?'✓ Offline-Kerncache vorhanden':'! Offline-Kerncache noch nicht vollständig. Öffne die App einmal online und lade sie neu.');}
+    const reg=await navigator.serviceWorker.getRegistration();serviceWorkerReady=!!reg;
+    lines.push(serviceWorkerReady?'✓ Service Worker registriert':'! Service Worker noch nicht aktiv – Seite einmal online neu laden.');
+    if('caches'in window){const keys=await caches.keys();cacheReady=keys.some(k=>k.startsWith(APP_CACHE_PREFIX));lines.push(cacheReady?'✓ Offline-Kerncache vorhanden':'! Offline-Kerncache noch nicht vollständig. Öffne die App einmal online und lade sie neu.');}
   }catch(err){lines.push(`! Offline-Prüfung nicht möglich: ${err.message}`)}
-  const ok=lines.filter(x=>x.startsWith('✗')).length===0;
+  const ok=serviceWorkerReady&&cacheReady;
   alert(lines.join('\n'));
   return ok;
 }
@@ -713,7 +733,7 @@ function bindInstallSupport(){
   $('#installModal')?.addEventListener('click',event=>{if(event.target.id==='installModal')closeInstallGuide()});
   $('#openSafariMicBtn')?.addEventListener('click',openMicrophoneInSafari);
   window.matchMedia?.('(display-mode: standalone)').addEventListener?.('change',updateInstallUI);
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&state.player?.playing)requestWakeLock();else if(document.visibilityState==='hidden')releaseWakeLock()});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&state.player?.playing)requestWakeLock();else if(document.visibilityState==='hidden'){releaseWakeLock();if(state.player?.countingDown)cancelCountdown()}});
   const screenParam=new URLSearchParams(location.search).get('screen');if(screenParam&&['home','learn','library','kids','import','tuner','settings'].includes(screenParam))setTimeout(()=>openScreen(screenParam),0);
   updateInstallUI();
 }
@@ -723,6 +743,6 @@ async function requestWakeLock(){
 }
 async function releaseWakeLock(){try{await wakeLockSentinel?.release()}catch{}wakeLockSentinel=null}
 
-window.__LQ_TEST__={state,BUILTIN_SONGS,REFERENCE_SONGS,openScreen,openSongDetail,startPlayer,seekTo,runDiagnostics,parseChordPro,parseTextTab,parseMusicXML,parseLucaJSON,parseMidiFile,finishAttempt,detectPitchYIN,runPitchSelfTest,startMic,stopMic,isStandaloneMode,updateInstallUI,requestWakeLock,releaseWakeLock,openExternalUrl,updateNetworkUI,checkOfflineReadiness};
+window.__LQ_TEST__={state,BUILTIN_SONGS,REFERENCE_SONGS,openScreen,openSongDetail,startPlayer,seekTo,cancelCountdown,runDiagnostics,parseChordPro,parseTextTab,parseMusicXML,parseLucaJSON,parseMidiFile,finishAttempt,detectPitchYIN,runPitchSelfTest,startMic,stopMic,isStandaloneMode,updateInstallUI,requestWakeLock,releaseWakeLock,openExternalUrl,updateNetworkUI,checkOfflineReadiness};
 
 init().catch(err=>{console.error(err);document.body.insertAdjacentHTML('afterbegin',`<div style="background:#7b1f2d;color:white;padding:1rem">Startfehler: ${escapeHTML(err.message)}</div>`)})

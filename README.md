@@ -1,6 +1,13 @@
-# Luca Guitar Quest · Interactive Play 3.0
+# Luca Guitar Quest · Interactive Play 3.0.1
 
 Diese Version enthält die tatsächlich animierte vertikale Sechs-Saiten-Spielspur.
+
+## Fixes in 3.0.1
+
+- Offline-Prüfung verwendet denselben Cache-Namen wie der Service Worker
+- 3-2-1-Countdown wird beim Verlassen des Players oder Ausblenden der App sicher abgebrochen
+- deutsche Saitenbezeichnung E A D G H e in Stimmgerät und Live-Anzeige
+- Service Worker entfernt nur alte Caches dieser App
 
 ## Neu
 
