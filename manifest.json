@@ -1,8 +1,8 @@
 {
   "id": "./index.html",
-  "name": "Luca Guitar Quest · Interactive Play 3.0",
-  "short_name": "Guitar Quest 3",
-  "description": "Offlinefähige Gitarrenlern-App mit animierter Sechs-Saiten-Spielspur, Mikrofonfeedback, Lern-, Spiel- und Kita-Modus.",
+  "name": "Luca Guitar Quest · Unified 5.1.1",
+  "short_name": "Guitar Quest",
+  "description": "Offlinefähige Gitarrenlern-App für iPad und Android mit Interactive Play, Mikrofonfeedback, Stimmgerät, Aufnahmen, Spotify Practice Lab und Kinderliedern.",
   "lang": "de-DE",
   "dir": "ltr",
   "start_url": "./index.html?source=pwa",
@@ -74,6 +74,17 @@
       "name": "Lernpfad",
       "short_name": "Lernen",
       "url": "./index.html?source=pwa&screen=learn",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Spotify Practice Lab",
+      "short_name": "Practice Lab",
+      "url": "./spotify-practice.html?source=pwa",
       "icons": [
         {
           "src": "icon-192.png",

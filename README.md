@@ -1,33 +1,40 @@
-# Luca Guitar Quest · Interactive Play 3.0.1
+# Luca Guitar Quest · Unified 5.1.1
 
-Diese Version enthält die tatsächlich animierte vertikale Sechs-Saiten-Spielspur.
+Die verbindliche Hauptversion von Luca Guitar Quest. Sie vereint den animierten Interactive-Play-Modus, Mikrofontraining, Offline-PWA, persönliche Übungen und das Spotify Practice Lab in einer einzigen direkt nutzbaren App.
 
-## Fixes in 3.0.1
+## Enthalten
 
-- Offline-Prüfung verwendet denselben Cache-Namen wie der Service Worker
-- 3-2-1-Countdown wird beim Verlassen des Players oder Ausblenden der App sicher abgebrochen
-- deutsche Saitenbezeichnung E A D G H e in Stimmgerät und Live-Anzeige
-- Service Worker entfernt nur alte Caches dieser App
+- vertikale Sechs-Saiten-Spielspur mit Lern-, Übungs-, Spiel- und Kita-Modus
+- Countdown, Timing-Wertung, Serie, schwierige Stelle, A/B-Loop und adaptive Tempoempfehlung
+- Mikrofonmodus mit Stimmgerät, Latenzmessung, Empfindlichkeit, Auto-Aufnahme und Wiedergabe
+- 22 vollständig spielbare Übungen sowie 151 persönliche Referenz-Templates
+- Import für Luca-JSON, ChordPro und Text-/ASCII-Tabs
+- Spotify Practice Lab mit lokalem Übungsfortschritt und optionalen Spotify-Links
+- lokale Sicherung und Wiederherstellung der App-Daten
+- installierbare Offline-PWA für iPad und Android/Xiaomi
 
-## Neu
+Die Kern-App benötigt weder API-Schlüssel noch Abo, Cloud-Guthaben, eigenes Backend oder Anmeldung. Spotify wird nur über bewusst geöffnete Links verwendet; die App lädt keine fremden Medien automatisch.
 
-- Guitar-Hero-artige Notenbewegung zur horizontalen Trefferlinie
-- Lernmodus, Übungsmodus, Spielmodus und Kita-Modus
-- Perfekt/Gut/Zu früh/Zu spät/Verpasst
-- Bestserie, schwierige Stelle und automatischer A/B-Loop
-- adaptive Tempoempfehlung
-- Mikrofon-Latenzmessung
-- aktualisierter Offline-Cache
+## Installation über GitHub Pages
 
-## GitHub Pages
+1. Dieses ZIP entpacken und **alle enthaltenen Dateien direkt** in das Hauptverzeichnis des GitHub-Repositories `luca-guitar-quest` hochladen. `index.html` muss im Repository-Hauptverzeichnis liegen.
+2. In GitHub unter **Settings → Pages** als Quelle **Deploy from a branch**, Branch **main** und Ordner **/(root)** wählen, speichern und anschließend `https://77luca78.github.io/luca-guitar-quest/` öffnen.
+3. Die Seite beim ersten Start online vollständig laden. Auf dem iPad in Safari **Teilen → Zum Home-Bildschirm**, auf Xiaomi in Chrome **App installieren/Zum Startbildschirm** wählen, Mikrofon erlauben und danach den Flugmodus-Test aus `DEVICE_TEST.md` durchführen.
 
-Die Dateien liegen direkt im Repository-Hauptverzeichnis. GitHub Pages bleibt auf `main` und `/(root)`. Nach dem Update die installierte PWA vollständig schließen und neu öffnen. Bei altem Cache einmal die Website-Daten der GitHub-Pages-Adresse löschen.
+## Wichtige Dateien
 
-## Test auf dem iPad
+- `index.html` – Haupt-App
+- `spotify-practice.html` – Spotify Practice Lab
+- `app.js` – Übungen, Player, Import, Fortschritt und Sicherung
+- `mic-pro.js` – Mikrofon-, Stimm- und Aufnahmefunktionen
+- `service-worker.js` – Offline-Cache
+- `personal_catalog.json` – persönlicher Referenzkatalog
+- `DEVICE_TEST.md` – kurzer echter Geräte-Abnahmetest
+- `TEST_REPORT.md` – dokumentierte automatische Prüfungen und offene Gerätetests
 
-1. App im Querformat öffnen.
-2. Eine Übung starten.
-3. Mikrofon erlauben.
-4. Latenz messen und vier kurze gedämpfte Anschläge spielen.
-5. Lernmodus und Kita-Modus prüfen.
-6. Flugmodus testen.
+## Aktualisierung einer installierten PWA
+
+Nach einem GitHub-Pages-Update die installierte App vollständig aus dem App-Umschalter schließen und neu öffnen. Falls weiterhin eine alte Version erscheint, die Website-Daten der GitHub-Pages-Adresse einmal löschen und die App erneut zum Home-Bildschirm hinzufügen.
+
+Version: **5.1.1**
+

@@ -6,7 +6,8 @@
   <meta name="theme-color" content="#15181c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Luca Guitar Quest · Interactive Play 3.0</title>
+  <title>Luca Guitar Quest · Unified 5.1.1</title>
+  <meta name="description" content="Offlinefähige Gitarrenlern-App für iPad und Android mit Interactive Play, Mikrofonfeedback, Stimmgerät, Aufnahmen, Lernpfad, Kinderliedern und Spotify Practice Lab.">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Luca Guitar Quest">
@@ -21,12 +22,13 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<a class="skip-link" href="#mainContent">Zum Inhalt springen</a>
 <div id="app" class="app-shell">
   <header class="topbar">
     <div class="topbar-inner">
       <button class="brand" data-nav="home" aria-label="Startseite öffnen">
         <span class="brand-logo">LQ</span>
-        <span><strong>Luca Guitar Quest</strong><small>Interactive Play 3.0 · Offline</small></span>
+        <span><strong>Luca Guitar Quest</strong><small>Unified 5.1.1 · Offline</small></span>
       </button>
       <nav class="desktop-nav" aria-label="Hauptnavigation">
         <button data-nav="home" class="active">⌂ Startseite</button>
@@ -45,7 +47,7 @@
     </div>
   </header>
 
-  <main class="main-content">
+  <main id="mainContent" class="main-content">
     <section id="screen-home" class="screen active">
       <div class="hero-card">
         <div>
@@ -55,6 +57,7 @@
           <div class="button-row">
             <button class="button primary" data-nav="learn">Weiterlernen</button>
             <button class="button secondary" id="quickPracticeBtn">Schnellübung</button>
+            <a class="button spotify-action" href="spotify-practice.html">Spotify Practice Lab</a>
             <button class="button secondary install-action" id="installHeroBtn">Auf iPad installieren</button>
           </div>
         </div>
@@ -85,11 +88,11 @@
     <section id="screen-library" class="screen">
       <div class="section-head"><div><h2>Songbibliothek</h2><p>Alle spielbaren Übungen, Favoriten und Imports in einer Übersicht</p></div></div>
       <div class="library-toolbar panel">
-        <input id="librarySearch" type="search" placeholder="Nach Titel, Kategorie oder Quelle suchen">
-        <select id="libraryMode"><option value="all">Alle Modi</option><option value="melody">Melodie</option><option value="chords">Akkorde</option><option value="rhythm">Rhythmus</option></select>
-        <select id="libraryDifficulty"><option value="all">Alle Level</option><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option><option value="4">Level 4+</option></select>
-        <select id="librarySource"><option value="all">Alle Quellen</option><option value="built-in">Mitgeliefert</option><option value="traditional">Traditionell</option><option value="public-domain">Public Domain</option><option value="favorite">Favoriten</option><option value="import">Import</option></select>
-        <select id="librarySort"><option value="recommended">Empfohlen</option><option value="title">Titel A–Z</option><option value="level">Level</option><option value="stars">Beste Bewertung</option><option value="recent">Zuletzt gespielt</option></select>
+        <input id="librarySearch" type="search" placeholder="Nach Titel, Kategorie oder Quelle suchen" aria-label="Songbibliothek durchsuchen">
+        <select id="libraryMode" aria-label="Spielmodus filtern"><option value="all">Alle Modi</option><option value="melody">Melodie</option><option value="chords">Akkorde</option><option value="rhythm">Rhythmus</option></select>
+        <select id="libraryDifficulty" aria-label="Schwierigkeitsgrad filtern"><option value="all">Alle Level</option><option value="1">Level 1</option><option value="2">Level 2</option><option value="3">Level 3</option><option value="4">Level 4+</option></select>
+        <select id="librarySource" aria-label="Songquelle filtern"><option value="all">Alle Quellen</option><option value="built-in">Mitgeliefert</option><option value="traditional">Traditionell</option><option value="public-domain">Public Domain</option><option value="favorite">Favoriten</option><option value="import">Import</option></select>
+        <select id="librarySort" aria-label="Songbibliothek sortieren"><option value="recommended">Empfohlen</option><option value="title">Titel A–Z</option><option value="level">Level</option><option value="stars">Beste Bewertung</option><option value="recent">Zuletzt gespielt</option></select>
       </div>
       <div class="library-layout">
         <aside class="panel category-panel">
@@ -138,6 +141,7 @@
           <label for="favoriteChords">Akkordfolge</label><input id="favoriteChords" value="G D Em C">
           <label for="favoriteBpm">BPM</label><input id="favoriteBpm" type="number" value="90" min="40" max="220">
           <button id="favoriteSaveBtn" class="button primary full">Als spielbare Übung speichern</button>
+          <a class="button spotify-action full" href="spotify-practice.html">Spotify Practice Lab öffnen</a>
           <p class="muted">Es wird keine geschützte Audiodatei heruntergeladen. Der Link dient als Referenz; die Übung wird aus Akkorden und Tempo erzeugt.</p>
         </div>
         <div class="panel">
@@ -181,9 +185,10 @@
         <div class="panel"><h3>Barrierefreiheit</h3><label><input id="highContrastToggle" type="checkbox"> Hoher Kontrast</label><label><input id="reducedMotionToggle" type="checkbox"> Bewegungen reduzieren</label><label for="fontScale">Schriftgröße</label><input id="fontScale" type="range" min="90" max="130" value="100"></div>
         <div class="panel"><h3>Spieler</h3><label><input id="metronomeDefault" type="checkbox" checked> Metronom standardmäßig aktiv</label><label><input id="micDefault" type="checkbox"> Mikrofon beim Start anbieten</label><label for="timingWindow">Trefferfenster</label><select id="timingWindow"><option value="180">Streng · 180 ms</option><option value="260" selected>Normal · 260 ms</option><option value="380">Locker · 380 ms</option></select></div>
         <div class="panel network-panel"><h3>Offline & Netzwerk</h3><label class="network-switch"><input id="networkToggle" type="checkbox"> Internet-Funktionen erlauben</label><div id="networkState" class="status-box">Lokaler Offline-Modus wird geprüft …</div><button id="offlineCheckBtn" class="button secondary full">Offline-Speicher prüfen</button><p class="muted">Standardmäßig bleibt das Internet innerhalb der App ausgeschaltet. Lernen, Bibliothek, Imports, Fortschritt, Stimmgerät und Mikrofon funktionieren lokal. Nur externe Spotify-/YouTube-/Quellenlinks benötigen eine Verbindung und deine ausdrückliche Freigabe.</p></div>
+        <div class="panel spotify-panel"><h3>Spotify Practice Lab</h3><p>Nutze deinen persönlichen Katalog als Motivation, erstelle vereinfachte Akkord- und Rhythmusübungen und öffne Spotify nur auf ausdrücklichen Wunsch.</p><a class="button spotify-action full" href="spotify-practice.html">Practice Lab starten</a></div>
         <div class="panel install-panel"><h3>iPad-App installieren</h3><div id="installState" class="install-state">Installationsstatus wird geprüft …</div><button id="installGuideBtn" class="button primary full">Installationsschritte anzeigen</button><button id="shareInstallLinkBtn" class="button secondary full">App-Link teilen</button><p class="muted">Für die erste Installation und den Mikrofonzugriff muss die App über HTTPS geöffnet werden. Nach dem ersten vollständigen Start funktioniert der Kern offline.</p></div>
         <div class="panel"><h3>Diagnose</h3><button id="runDiagnosticsBtn" class="button secondary full">Funktionen prüfen</button><div id="diagnosticsOutput" class="diagnostics-output">Noch keine Prüfung durchgeführt.</div></div>
-        <div class="panel"><h3>Backup</h3><button id="exportBackupBtn" class="button secondary full">Backup exportieren</button><label for="backupImport">Backup importieren</label><input id="backupImport" type="file" accept="application/json"><textarea id="backupPreview" placeholder="Exportinformationen erscheinen hier" readonly></textarea></div>
+        <div class="panel"><h3>Backup</h3><button id="exportBackupBtn" class="button secondary full">Backup exportieren</button><label for="backupImport">Backup importieren</label><input id="backupImport" type="file" accept="application/json"><label for="backupPreview">Backup-Vorschau</label><textarea id="backupPreview" placeholder="Exportinformationen erscheinen hier" readonly></textarea></div>
       </div>
     </section>
 
@@ -218,7 +223,6 @@
           <span id="latencyValue" class="latency-chip">0 ms</span>
         </div>
       </div>
-
       <div class="score-strip">
         <span>Score <b id="playerScore">0</b></span>
         <span>Treffer <b id="playerAccuracy">0%</b></span>

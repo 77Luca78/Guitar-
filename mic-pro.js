@@ -6,7 +6,7 @@
 (() => {
   'use strict';
 
-  const VERSION = '2.0.0';
+  const VERSION = '2.1.0';
   const STORAGE_KEY = 'lq-mic-pro-settings-v2';
   const REC_DB = 'lq-mic-recordings';
   const REC_STORE = 'recordings';
@@ -63,7 +63,6 @@
   let acceptedPitchBuffer = [];
   let calibrationRunning = false;
   let micRestarting = false;
-  let originalTogglePlay = null;
   let recDbPromise = null;
   let recordingListUrls = [];
 
@@ -138,7 +137,7 @@
             <div class="mic-pro-row stack"><label>Profil</label><select id="micProPreset"><option value="acoustic-quiet">Akustik · leise</option><option value="acoustic-normal">Akustik · normal</option><option value="electric-unplugged">E-Gitarre unverstärkt</option><option value="loud-room">Laute Umgebung</option><option value="custom">Benutzerdefiniert</option></select></div>
             <div class="mic-pro-row"><label>Empfindlichkeit <small>Digitale Verstärkung nach dem iPad-Mikrofon</small></label><b id="micProGainValue" class="mic-pro-value">5,0×</b></div>
             <input id="micProGain" type="range" min="1" max="12" step="0.25">
-            <div class="mic-pro-row"><label>Raushshwelle <small>Niedriger = leisere Töne werden erkannt</small></label><b id="micProGateValue" class="mic-pro-value">−64 dB</b></div>
+            <div class="mic-pro-row"><label>Rauschschwelle <small>Niedriger = leisere Töne werden erkannt</small></label><b id="micProGateValue" class="mic-pro-value">−64 dB</b></div>
             <input id="micProGate" type="range" min="-80" max="-25" step="1">
             <div class="mic-pro-row"><label>Erkennungssicherheit <small>Niedriger reagiert schneller, aber empfindlicher auf Nebengeräusche</small></label><b id="micProConfidenceValue" class="mic-pro-value">38 %</b></div>
             <input id="micProConfidence" type="range" min="25" max="85" step="1">
@@ -334,7 +333,7 @@
       timeData=new Float32Array(analyser.fftSize);freqData=new Uint8Array(analyser.frequencyBinCount);
       pitchHistory=[];acceptedPitchBuffer=[];lastMicFrame=0;lastStrongSignalAt=performance.now();lastMicError='';previousRms=0;lastOnsetAt=0;
       if(origin==='player')state.player.mic=true;
-      updateMicButtons(true);setMicStatus('Mikrofon Pro läuft. Leise Töne werden verstärkt; die Raushshwelle ist anpassbar.','good');
+      updateMicButtons(true);setMicStatus('Mikrofon Pro läuft. Leise Töne werden verstärkt; die Rauschschwelle ist anpassbar.','good');
       panelStatus(`Mikrofon aktiv · ${track.label||'iPad-Mikrofon'} · ${track.getSettings?.().sampleRate||audioCtx.sampleRate} Hz`,'good');
       await enumerateInputs();
       micLoopId=requestAnimationFrame(micLoop);
@@ -429,7 +428,7 @@
 
     if(sig.rms<gate){
       if(now-lastStrongSignalAt>550){
-        const msg=`Signal unter Raushshwelle (${linearToDb(sig.rms).toFixed(1)} dB / Grenze ${settings.gateDb} dB). Empfindlichkeit erhöhen oder automatisch kalibrieren.`;
+        const msg=`Signal unter Rauschschwelle (${linearToDb(sig.rms).toFixed(1)} dB / Grenze ${settings.gateDb} dB). Empfindlichkeit erhöhen oder automatisch kalibrieren.`;
         const info=document.getElementById('tunerInfo');if(info)info.textContent=msg;
         const detail=document.getElementById('livePitchDetail');if(detail)detail.textContent='Sehr leises Signal';
       }
@@ -453,14 +452,14 @@
     const dot=document.getElementById('liveMicDot');if(dot){dot.classList.add('on');dot.classList.remove('warn','bad')}
 
     const t=performance.now();
-    if(state.player.mic&&state.player.playing&&state.player.mode==='melody'&&(det.midi!==lastDetectedMidi||t-lastDetectedAt>cfg.minHold)){
+    if(state.player.mic&&(state.player.playing||state.player.waitingForEvent)&&state.player.mode==='melody'&&(det.midi!==lastDetectedMidi||t-lastDetectedAt>cfg.minHold)){
       judgeInput({type:'melody',string:det.loc.string,midi:det.midi},null,{fromMic:true,countWrong:false});lastDetectedMidi=det.midi;lastDetectedAt=t;
     }
-    if(state.player.mic&&state.player.playing&&state.player.mode==='chords'&&t-lastChordAt>320){
+    if(state.player.mic&&(state.player.playing||state.player.waitingForEvent)&&state.player.mode==='chords'&&t-lastChordAt>320){
       const ch=detectChordPro();if(ch){judgeInput({type:'chords',chord:ch},null,{fromMic:true,countWrong:false});lastChordAt=t}
     }
     const onsetRise=sig.rms-previousRms;
-    if(state.player.mic&&state.player.playing&&state.player.mode==='rhythm'&&sig.rms>gate*2.2&&onsetRise>settings.onsetSensitivity&&t-lastOnsetAt>115){
+    if(state.player.mic&&(state.player.playing||state.player.waitingForEvent)&&state.player.mode==='rhythm'&&sig.rms>gate*2.2&&onsetRise>settings.onsetSensitivity&&t-lastOnsetAt>115){
       const target=currentTargetEvent();if(target?.type==='rhythm'){judgeInput({type:'rhythm',direction:target.direction},null,{fromMic:true,countWrong:false});lastOnsetAt=t}
     }
     previousRms=sig.rms;micLoopId=requestAnimationFrame(micLoop);
@@ -503,7 +502,7 @@
       settings.gateDb=Math.round(clampLocal(Math.min(signalDb-10,noiseDb+7),-78,-30));
       settings.inputGain=Math.round(clampLocal(.09/Math.max(signalLevel,.002),1,12)*4)/4;
       settings.confidence=clampLocal(settings.confidence,0.30,0.55);settings.preset='custom';saveSettings();
-      panelStatus(`Kalibrierung abgeschlossen.\nUmgebung: ${noiseDb.toFixed(1)} dB\nGitarrensignal: ${signalDb.toFixed(1)} dB\nNeue Verstärkung: ${settings.inputGain.toFixed(2)}×\nNeue Raushshwelle: ${settings.gateDb} dB`,'good');
+      panelStatus(`Kalibrierung abgeschlossen.\nUmgebung: ${noiseDb.toFixed(1)} dB\nGitarrensignal: ${signalDb.toFixed(1)} dB\nNeue Verstärkung: ${settings.inputGain.toFixed(2)}×\nNeue Rauschschwelle: ${settings.gateDb} dB`,'good');
     }catch(err){panelStatus(`Kalibrierung fehlgeschlagen: ${err.message}`,'bad')}
     finally{if(inputGainNode&&audioCtx)inputGainNode.gain.setValueAtTime(settings.inputGain||calibrationOriginalGain,audioCtx.currentTime);calibrationRunning=false;if(btn)btn.disabled=false}
   }
@@ -608,17 +607,19 @@
     try{const file=new File([blob],`${safeName(record.title)}.${extensionFor(blob.type||record.mimeType||'')}`,{type:blob.type||record.mimeType});if(navigator.canShare?.({files:[file]}))await navigator.share({title:'Luca Guitar Quest Aufnahme',files:[file]});else downloadBlob(blob,record)}catch(err){if(err.name!=='AbortError')downloadBlob(blob,record)}
   }
 
-  function wrapPlayerToggle(){
-    if(typeof togglePlay!=='function'||originalTogglePlay)return;
-    originalTogglePlay=togglePlay;
-    togglePlay=function(){
+  function wrapPlayerRunning(){
+    if(typeof setPlayerRunning!=='function'||setPlayerRunning.__micProWrapped)return;
+    const original=setPlayerRunning;
+    const wrapped=function(running){
       const wasPlaying=!!state.player.playing;
-      originalTogglePlay();
+      const result=original.apply(this,arguments);
       const nowPlaying=!!state.player.playing;
       if(settings.autoRecord&&!wasPlaying&&nowPlaying){if(mediaRecorder?.state==='paused')resumeRecording();else startRecording()}
       if(settings.autoRecord&&wasPlaying&&!nowPlaying&&mediaRecorder?.state==='recording')pauseRecording();
+      return result;
     };
-    const btn=document.getElementById('playPauseBtn');if(btn)btn.onclick=togglePlay;
+    wrapped.__micProWrapped=true;
+    setPlayerRunning=wrapped;
   }
 
   function wrapFinishAttempt(){
@@ -634,7 +635,7 @@
   }
 
   function init(){
-    injectUI();wrapPlayerToggle();wrapFinishAttempt();observeUi();
+    injectUI();wrapPlayerRunning();wrapFinishAttempt();observeUi();
     window.addEventListener('beforeunload',()=>{if(mediaRecorder?.state==='recording')stopRecording()});
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&mediaRecorder?.state==='recording'&&!state.player.playing)stopRecording()});
     console.info(`[Luca Guitar Quest] Mikrofon Pro ${VERSION} geladen.`);

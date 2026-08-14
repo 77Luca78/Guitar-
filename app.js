@@ -8,7 +8,9 @@ const formatTime = ms => {
   const total = Math.max(0, Math.floor(ms / 1000));
   return `${Math.floor(total / 60)}:${String(total % 60).padStart(2,'0')}`;
 };
+const localDayKey = (date = new Date()) => `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 
+const APP_VERSION = '5.1.1';
 const APP_CACHE_PREFIX = 'luca-guitar-interactive-';
 
 const STRINGS = [
@@ -370,7 +372,10 @@ function renderPlayerStats(){
 function finishAttempt(){
   const p=state.player;if(p.finished)return;p.finished=true;if(p.sessionMode!=='learn')markMissedEvents();const total=p.events.length,accuracy=total?Math.round(p.hits/total*100):0,avg=p.timing.length?p.timing.reduce((a,b)=>a+b,0)/p.timing.length:Number(state.settings.timingWindow),timingScore=Math.round(Math.max(0,1-avg/Number(state.settings.timingWindow))*100),overall=Math.round(accuracy*.7+timingScore*.3),stars=overall>=90?3:overall>=75?2:overall>=50?1:0,xp=40+stars*40+Math.round(overall*.6);
   const spots=[...p.hardSpots.entries()].sort((a,b)=>b[1].count-a[1].count);p.hardestSpot=spots[0]?{timeMs:spots[0][0],...spots[0][1]}:null;p.recommendedSpeed=clamp(p.speed+(overall>=90?.05:overall<60?-.1:0),.5,1.5);
-  const key=`${p.song.id}:${p.mode}`,old=state.progress.songResults[key]||{bestScore:0,stars:0,attempts:0};state.progress.songResults[key]={bestScore:Math.max(old.bestScore,overall),stars:Math.max(old.stars,stars),attempts:old.attempts+1,bestTiming:old.bestTiming===undefined?Math.round(avg):Math.min(old.bestTiming,Math.round(avg)),bestCombo:Math.max(old.bestCombo||0,p.bestCombo||0),lastPlayed:new Date().toISOString()};state.progress.xp=(state.progress.xp||0)+xp;state.progress.streak=(state.progress.streak||0)+1;state.progress.lastPlayed=[p.song.id,...(state.progress.lastPlayed||[]).filter(id=>id!==p.song.id)].slice(0,12);persistProgress();renderAll();
+  const key=`${p.song.id}:${p.mode}`,old=state.progress.songResults[key]||{bestScore:0,stars:0,attempts:0};state.progress.songResults[key]={bestScore:Math.max(old.bestScore,overall),stars:Math.max(old.stars,stars),attempts:old.attempts+1,bestTiming:old.bestTiming===undefined?Math.round(avg):Math.min(old.bestTiming,Math.round(avg)),bestCombo:Math.max(old.bestCombo||0,p.bestCombo||0),lastPlayed:new Date().toISOString()};state.progress.xp=(state.progress.xp||0)+xp;
+  const practiceDate=new Date(),today=localDayKey(practiceDate),yesterdayDate=new Date(practiceDate);yesterdayDate.setDate(practiceDate.getDate()-1);const yesterday=localDayKey(yesterdayDate);
+  if(state.progress.lastPracticeDate!==today){state.progress.streak=state.progress.lastPracticeDate===yesterday?(state.progress.streak||0)+1:1;state.progress.lastPracticeDate=today}
+  state.progress.lastPlayed=[p.song.id,...(state.progress.lastPlayed||[]).filter(id=>id!==p.song.id)].slice(0,12);persistProgress();renderAll();
   $('#hardSpotLabel').textContent=p.hardestSpot?`${formatTime(p.hardestSpot.timeMs)}–${formatTime(Math.min(p.durationMs,p.hardestSpot.timeMs+8000))}`:'Keine klare Problemstelle';$('#hardSpotDetail').textContent=p.hardestSpot?`${p.hardestSpot.count} Auffälligkeiten · ${[...new Set(p.hardestSpot.reasons)].join(', ')}`:'Die Runde war gleichmäßig';$('#practiceHardSpotBtn').disabled=!p.hardestSpot;$('#adaptiveTempoLabel').textContent=`${Math.round(p.recommendedSpeed*100)}%`;$('#adaptiveTempoDetail').textContent=overall>=90?'Du bist bereit für etwas mehr Tempo.':overall<60?'Etwas langsamer festigt die Bewegung.':'Tempo beibehalten und sauber wiederholen.';$('#practiceAnalysis').classList.remove('hidden');showFeedback(`${overall}% · ${stars}★`,'perfect',1800)
 }
 function practiceHardestSpot(){const p=state.player;if(!p.hardestSpot)return;p.loopA=Math.max(0,p.hardestSpot.timeMs-1500);p.loopB=Math.min(p.durationMs,p.hardestSpot.timeMs+8000);p.loopOn=true;$('#loopToggleBtn').textContent='Loop an';$('#loopToggleBtn').classList.add('active');renderLoopRegion();seekTo(p.loopA,true);p.finished=false;showFeedback('Problemstelle im Loop','good',1300)}
@@ -606,6 +611,7 @@ function applySettings(){document.body.classList.toggle('high-contrast',!!state.
 async function saveSettings(apply=true){if(DB.db)await DB.put('settings',state.settings);else fallbackWrite('lq-pro-settings',state.settings);if(apply)applySettings()}
 async function runDiagnostics(){
   const results=[];const test=(name,ok,detail='')=>results.push(`${ok?'✓':'✗'} ${name}${detail?' — '+detail:''}`),warn=(name,detail='')=>results.push(`! ${name}${detail?' — '+detail:''}`);
+  test('App-Version',APP_VERSION==='5.1.1',APP_VERSION);
   test('Bibliothek geladen',state.songs.length>=BUILTIN_SONGS.length+REFERENCE_SONGS.length,`${state.songs.length} Einträge`);
   test('Mitgelieferte Übungen spielbar',BUILTIN_SONGS.every(s=>availableModes(s).length>0));
   test('Lieblingssong-Katalog geladen',REFERENCE_SONGS.length>=100,`${REFERENCE_SONGS.length} Referenzen`);
@@ -621,11 +627,11 @@ async function runDiagnostics(){
   for(const [name,fn] of [['ChordPro',()=>parseChordPro('{title: Test}\n[G] [D] [Em] [C]','test.cho')],['Text-Tab',()=>parseTextTab('e|--0--|\nB|--1--|\nG|--0--|\nD|--2--|\nA|--3--|\nE|-----|','test.txt')],['MusicXML',()=>parseMusicXML('<?xml version="1.0"?><score-partwise><part><measure><attributes><divisions>1</divisions></attributes><note><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration></note></measure></part></score-partwise>','test.musicxml')],['Luca JSON',()=>parseLucaJSON('{"title":"Test","modes":{"rhythm":[]}}')]]){
     try{const parsed=fn();test(`${name}-Parser`,!!parsed)}catch(err){test(`${name}-Parser`,false,err.message)}
   }
-  test('MIDI-Parser vorhanden',typeof parseMidiFile==='function');('serviceWorker'in navigator)?test('Service Worker',true,'Schnittstelle vorhanden'):warn('Service Worker','nur über HTTPS/localhost aktiv');test('Offline-/Netzwerkmodus',typeof openExternalUrl==='function'&&typeof updateNetworkUI==='function',networkModeLabel());if('caches'in window){const cacheKeys=await caches.keys();const ready=cacheKeys.some(k=>k.startsWith(APP_CACHE_PREFIX));ready?test('Offline-Kerncache',true,cacheKeys.join(', ')):warn('Offline-Kerncache','App einmal online neu laden, damit alle Kerndateien gespeichert werden')}
+  test('MIDI-Parser vorhanden',typeof parseMidiFile==='function');test('Spotify Practice Lab',!!document.querySelector('a[href="spotify-practice.html"]'));('serviceWorker'in navigator)?test('Service Worker',true,'Schnittstelle vorhanden'):warn('Service Worker','nur über HTTPS/localhost aktiv');test('Offline-/Netzwerkmodus',typeof openExternalUrl==='function'&&typeof updateNetworkUI==='function',networkModeLabel());if('caches'in window){const cacheKeys=await caches.keys();const ready=cacheKeys.some(k=>k.startsWith(APP_CACHE_PREFIX));ready?test('Offline-Kerncache',true,cacheKeys.join(', ')):warn('Offline-Kerncache','App einmal online neu laden, damit alle Kerndateien gespeichert werden')}
   const failures=results.filter(r=>r.startsWith('✗')).length;results.unshift(failures?`Prüfung abgeschlossen: ${failures} Problem(e) gefunden.`:'Prüfung abgeschlossen: keine internen Funktionsfehler erkannt.');
   $('#diagnosticsOutput').textContent=results.join('\n');return{failures,results};
 }
-async function exportBackup(){const data={version:2,exportedAt:new Date().toISOString(),songs:state.customSongs,sources:state.sources,progress:state.progress,settings:state.settings};const text=JSON.stringify(data,null,2);$('#backupPreview').value=text;const blob=new Blob([text],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Luca_Guitar_Quest_Backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+async function exportBackup(){const data={version:3,appVersion:APP_VERSION,exportedAt:new Date().toISOString(),songs:state.customSongs,sources:state.sources,progress:state.progress,settings:state.settings};const text=JSON.stringify(data,null,2);$('#backupPreview').value=text;const blob=new Blob([text],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Luca_Guitar_Quest_Backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 async function importBackup(e){const file=e.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(DB.db){for(const song of data.songs||[])await DB.put('songs',song);for(const source of data.sources||[])await DB.put('sources',source);if(data.progress)await DB.put('progress',data.progress);if(data.settings)await DB.put('settings',data.settings)}else{fallbackWrite('lq-pro-songs',data.songs||[]);fallbackWrite('lq-pro-sources',data.sources||[]);if(data.progress)fallbackWrite('lq-pro-progress',data.progress);if(data.settings)fallbackWrite('lq-pro-settings',data.settings)}await loadPersistentData();applySettings();renderAll();alert('Backup wurde importiert.')}catch(err){alert(`Backup konnte nicht importiert werden: ${err.message}`)}}
 
 function escapeHTML(value=''){return String(value).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
@@ -658,15 +664,17 @@ function bindNetworkSupport(){
   window.addEventListener('offline',updateNetworkUI);
   updateNetworkUI();
 }
+function normalizeExternalUrl(value){try{const url=new URL(value,location.href);return ['https:','http:'].includes(url.protocol)?url.href:null}catch{return null}}
 async function openExternalUrl(url,label='Externer Link'){
-  if(!url){alert(`${label} ist nicht hinterlegt.`);return false}
+  const safeUrl=normalizeExternalUrl(url);
+  if(!safeUrl){alert(`${label} ist nicht gültig. Erlaubt sind nur HTTP- und HTTPS-Adressen.`);return false}
   if(!state.settings.networkEnabled){
     const enable=confirm(`${label} benötigt Internet.\n\nDie App ist aktuell im lokalen Offline-Modus. Internet-Funktionen jetzt erlauben?`);
     if(!enable){openScreen('settings');return false}
     state.settings.networkEnabled=true;await saveSettings();updateNetworkUI();
   }
   if(navigator.onLine===false){alert('Zurzeit besteht keine Netzwerkverbindung. Die lokalen Lernfunktionen bleiben trotzdem verfügbar.');return false}
-  const win=window.open(url,'_blank','noopener');
+  const win=window.open(safeUrl,'_blank','noopener');
   if(!win)alert('Der externe Link wurde vom Browser blockiert. Erlaube Pop-ups für diese App oder öffne den Link in Safari.');
   return !!win;
 }
@@ -743,6 +751,6 @@ async function requestWakeLock(){
 }
 async function releaseWakeLock(){try{await wakeLockSentinel?.release()}catch{}wakeLockSentinel=null}
 
-window.__LQ_TEST__={state,BUILTIN_SONGS,REFERENCE_SONGS,openScreen,openSongDetail,startPlayer,seekTo,cancelCountdown,runDiagnostics,parseChordPro,parseTextTab,parseMusicXML,parseLucaJSON,parseMidiFile,finishAttempt,detectPitchYIN,runPitchSelfTest,startMic,stopMic,isStandaloneMode,updateInstallUI,requestWakeLock,releaseWakeLock,openExternalUrl,updateNetworkUI,checkOfflineReadiness};
+window.__LQ_TEST__={APP_VERSION,state,BUILTIN_SONGS,REFERENCE_SONGS,openScreen,openSongDetail,startPlayer,seekTo,cancelCountdown,runDiagnostics,parseChordPro,parseTextTab,parseMusicXML,parseLucaJSON,parseMidiFile,finishAttempt,detectPitchYIN,runPitchSelfTest,startMic,stopMic,isStandaloneMode,updateInstallUI,requestWakeLock,releaseWakeLock,openExternalUrl,updateNetworkUI,checkOfflineReadiness,localDayKey};
 
 init().catch(err=>{console.error(err);document.body.insertAdjacentHTML('afterbegin',`<div style="background:#7b1f2d;color:white;padding:1rem">Startfehler: ${escapeHTML(err.message)}</div>`)})
